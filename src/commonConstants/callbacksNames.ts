@@ -1,0 +1,4 @@
+export const CALLBACK_NAMES = {
+  I_AM_CONSUMER: 'I_AM_CONSUMER',
+  I_AM_SELLER: 'I_AM_SELLER',
+};

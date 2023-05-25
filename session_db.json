@@ -3,7 +3,11 @@
     {
       "id": "777795628:777795628",
       "data": {
-        "__scenes": {}
+        "__scenes": {
+          "current": "I_AM_SELLER_SCENE",
+          "state": {}
+        },
+        "scene_counter": 1
       }
     }
   ]

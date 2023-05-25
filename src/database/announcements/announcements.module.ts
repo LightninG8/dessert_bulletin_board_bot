@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Announcement, AnnouncementSchema } from 'src/schemas';
+import { Announcement, AnnouncementSchema } from '../schemas';
 
 @Module({
   imports: [
