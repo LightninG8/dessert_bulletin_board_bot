@@ -10,33 +10,15 @@ import {
 } from 'src/common';
 import { UseFilters, UseGuards } from '@nestjs/common';
 import { Scenes } from 'telegraf';
+import { startKeyboards } from 'src/bot/keyboards';
 
 @UseFilters(TelegrafExceptionFilter)
 @Scene(SCENES.START_SCENE)
 export class StartScene {
   @SceneEnter()
   async enter(@Ctx() ctx: SceneContext) {
-    ctx.session.__scenes.state['start_state'] = 1;
-
-    console.log(ctx.session);
-
     await ctx.reply(MESSAGES.START, {
-      reply_markup: {
-        inline_keyboard: [
-          [
-            {
-              text: MESSAGES.I_AM_CONSUMER,
-              callback_data: CALLBACK_NAMES.I_AM_CONSUMER,
-            },
-          ],
-          [
-            {
-              text: MESSAGES.I_AM_SELLER,
-              callback_data: CALLBACK_NAMES.I_AM_SELLER,
-            },
-          ],
-        ],
-      },
+      reply_markup: startKeyboards.start(),
     });
   }
 

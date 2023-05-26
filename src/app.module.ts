@@ -73,6 +73,6 @@ export class AppModule {
     @InjectBot(BOT_NAME) private bot: Telegraf<Context>,
     @InjectConnection() private connection: Connection,
   ) {
-    // this.bot.use(session(this.connection.db, { collectionName: 'sessions' }));
+    this.bot.use(session(this.connection.db, { collectionName: 'sessions' }));
   }
 }

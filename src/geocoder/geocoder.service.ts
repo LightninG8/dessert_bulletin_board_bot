@@ -11,9 +11,9 @@ export class GeocoderService {
     provider: 'openstreetmap',
   });
 
-  reverse(coordinates: ICoordinates) {
+  async reverse(coordinates: ICoordinates) {
     // Вызываем функцию для поиска города по заданным координатам
-    return this.geocoder
+    return await this.geocoder
       .reverse({
         lat: coordinates.latitude,
         lon: coordinates.longitude,
