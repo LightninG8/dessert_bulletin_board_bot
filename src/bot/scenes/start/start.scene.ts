@@ -1,4 +1,12 @@
-import { Action, Ctx, Hears, Scene, SceneEnter, Start } from 'nestjs-telegraf';
+import {
+  Action,
+  Command,
+  Ctx,
+  Hears,
+  Scene,
+  SceneEnter,
+  Start,
+} from 'nestjs-telegraf';
 import { SceneContext } from 'telegraf/typings/scenes';
 import { Update } from 'telegraf/typings/core/types/typegram';
 import { CALLBACK_NAMES, SCENES, MESSAGES } from 'src/commonConstants';
@@ -9,17 +17,16 @@ import {
   getCallbackData,
 } from 'src/common';
 import { UseFilters, UseGuards } from '@nestjs/common';
-import { Scenes } from 'telegraf';
+import { Markup, Scenes } from 'telegraf';
 import { startKeyboards } from 'src/bot/keyboards';
 
 @UseFilters(TelegrafExceptionFilter)
 @Scene(SCENES.START_SCENE)
 export class StartScene {
   @SceneEnter()
-  async enter(@Ctx() ctx: SceneContext) {
-    await ctx.reply(MESSAGES.START, {
-      reply_markup: startKeyboards.start(),
-    });
+  async enter(@Ctx() ctx: SceneContext & any) {
+    console.log(ctx.update.message.from);
+    await ctx.reply(MESSAGES.START, startKeyboards.start());
   }
 
   @Action(CALLBACK_NAMES.I_AM_CONSUMER)
@@ -33,9 +40,12 @@ export class StartScene {
   @UseGuards(SellerGuard)
   @Action(CALLBACK_NAMES.I_AM_SELLER)
   async onIAmSeller(
-    @Ctx() ctx: Scenes.SceneContext & { update: Update.CallbackQueryUpdate },
+    @Ctx()
+    ctx: Scenes.SceneContext & { update: Update.CallbackQueryUpdate } & any,
   ) {
-    // await ctx.scene.leave();
+    ctx.answerCbQuery();
+
+    await ctx.editMessageReplyMarkup(null);
 
     await ctx.scene.enter(SCENES.I_AM_SELLER_SCENE);
   }

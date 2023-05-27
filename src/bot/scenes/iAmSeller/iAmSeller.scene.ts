@@ -1,6 +1,7 @@
 import {
   Action,
   Context as Ctx,
+  Hears,
   On,
   Wizard,
   WizardStep,
@@ -9,7 +10,7 @@ import { SCENES, MESSAGES, CALLBACK_NAMES } from 'src/commonConstants';
 import { TelegrafExceptionFilter, tabsFormatter } from 'src/common';
 import { UseFilters } from '@nestjs/common';
 import { GeocoderService } from 'src/geocoder';
-import { Scenes } from 'telegraf';
+import { Markup, Scenes } from 'telegraf';
 import { iAmSellerKeyboards } from 'src/bot/keyboards';
 
 @UseFilters(TelegrafExceptionFilter)
@@ -17,91 +18,119 @@ import { iAmSellerKeyboards } from 'src/bot/keyboards';
 export class IAmSellerScene {
   constructor(private geocoderService: GeocoderService) {}
 
+  // Отправьте геолокацию
   @WizardStep(1)
-  step1(@Ctx() ctx: Scenes.WizardContext) {
-    ctx.reply(MESSAGES.REGISTRATION_1);
+  step1(@Ctx() ctx: Scenes.WizardContext & any) {
+    ctx.wizard.state.user = {};
+
+    ctx.reply(MESSAGES.REGISTRATION_1, iAmSellerKeyboards.step1());
 
     ctx.wizard.next();
   }
 
+  // Фото
   @WizardStep(2)
   @On('location')
   // Shitcode. Хз какой интерфейс под сообщение с локацией
   async step2Location(@Ctx() ctx: Scenes.WizardContext & any) {
     // Обратное геодекодирование
-    const city = await this.geocoderService
+    const location = await this.geocoderService
       .reverse(ctx.update.message.location)
       .then((res) => {
-        return res[0].city;
+        return res[0];
       });
 
-    if (city == null) {
+    if (location.city == null) {
       ctx.reply('Не получилось определить геолокацию. Напишите текстом');
     } else {
-      ctx.wizard.state.city = city;
+      ctx.wizard.state.user.city = location.city;
+      ctx.wizard.state.user.location = location;
 
-      await ctx.reply(MESSAGES.REGISTRATION_2, {
-        reply_markup: iAmSellerKeyboards.step2(),
-      });
+      await ctx.reply(MESSAGES.REGISTRATION_2, iAmSellerKeyboards.step2());
 
       ctx.wizard.next();
     }
   }
 
+  // Фото
   @WizardStep(2)
   @On('text')
   // Shitcode. Хз какой интерфейс под сообщение с локацией
   async step2Text(@Ctx() ctx: Scenes.WizardContext & any) {
-    ctx.wizard.state.city = ctx.update.message.text;
+    ctx.wizard.state.user.city = ctx.update.message.text;
 
-    await ctx.reply(MESSAGES.REGISTRATION_2, {
-      reply_markup: iAmSellerKeyboards.step2(),
-    });
+    await ctx.reply(MESSAGES.REGISTRATION_2, iAmSellerKeyboards.step2());
+
+    ctx.wizard.next();
+  }
+
+  // Имя
+  @WizardStep(3)
+  @On('photo')
+  async step3(@Ctx() ctx: Scenes.WizardContext & any) {
+    ctx.wizard.state.user.photo = ctx.update.message.photo.pop().file_id;
+
+    await ctx.reply(MESSAGES.REGISTRATION_3, iAmSellerKeyboards.step3());
 
     ctx.wizard.next();
   }
 
   @WizardStep(3)
-  @On('photo')
-  async step3(@Ctx() ctx: Scenes.WizardContext & any) {
-    ctx.wizard.state.photo = ctx.update.message.photo.pop().file_id;
+  @Hears(MESSAGES.TAKE_FROM_PROFILE)
+  async takePhotoFromProfile(@Ctx() ctx: Scenes.WizardContext & any) {
+    const user = await ctx.telegram.getUserProfilePhotos(ctx.from.id, 0);
+    const photo = user.photos[0][0]?.file_id;
 
-    console.log();
-    await ctx.reply(MESSAGES.REGISTRATION_3, {
-      reply_markup: iAmSellerKeyboards.step3(),
-    });
+    ctx.wizard.state.user.photo = photo || null;
+
+    console.log(user);
+
+    await ctx.reply(MESSAGES.REGISTRATION_3, iAmSellerKeyboards.step3());
+
+    ctx.wizard.next();
+  }
+
+  // Описание
+  @WizardStep(4)
+  @Hears(MESSAGES.TAKE_FROM_PROFILE)
+  async takeNameFromProdile(@Ctx() ctx: Scenes.WizardContext & any) {
+    const { first_name, last_name } = ctx.update.message.from;
+
+    ctx.wizard.state.user.name = first_name + ' ' + last_name;
+
+    await ctx.reply(MESSAGES.REGISTRATION_4, Markup.removeKeyboard());
 
     ctx.wizard.next();
   }
 
   @WizardStep(4)
   async step4(@Ctx() ctx: Scenes.WizardContext & any) {
-    console.log(ctx.update.message.from);
+    ctx.wizard.state.user.name = ctx.update.message.text;
 
-    ctx.wizard.state.name = ctx.update.message.text;
-
-    await ctx.reply(MESSAGES.REGISTRATION_4);
+    await ctx.reply(MESSAGES.REGISTRATION_4, Markup.removeKeyboard());
 
     ctx.wizard.next();
   }
 
+  // Контакты
   @WizardStep(5)
   async step5(@Ctx() ctx: Scenes.WizardContext & any) {
-    ctx.wizard.state.about = ctx.update.message.text;
+    ctx.wizard.state.user.about = ctx.update.message.text;
 
-    await ctx.reply(MESSAGES.REGISTRATION_5);
+    await ctx.reply(MESSAGES.REGISTRATION_5, Markup.removeKeyboard());
 
     ctx.wizard.next();
   }
 
+  // Подтверждение
   @WizardStep(6)
   async step6(@Ctx() ctx: Scenes.WizardContext & any) {
-    ctx.wizard.state.contacts = ctx.update.message.text;
+    ctx.wizard.state.user.contacts = ctx.update.message.text;
 
-    const { name, photo, city, about, contacts } = ctx.wizard.state;
+    const { name, photo, city, about, contacts } = ctx.wizard.state.user;
 
     await ctx.replyWithPhoto(photo, {
-      reply_markup: iAmSellerKeyboards.step6(),
+      ...iAmSellerKeyboards.step6(),
       caption: tabsFormatter(
         `
 ${MESSAGES.REGISTRATION_6}
@@ -113,28 +142,23 @@ ${MESSAGES.REGISTRATION_6}
         `,
       ),
     });
+
+    ctx.wizard.next();
   }
 
-  @Action(CALLBACK_NAMES.REGISTRATION_DONE)
+  @WizardStep(7)
+  @Hears(MESSAGES.CONFIRM)
   async step7(@Ctx() ctx: Scenes.WizardContext) {
-    await ctx.reply(MESSAGES.REGISTRATION_7, {
-      reply_markup: iAmSellerKeyboards.step7(),
-    });
+    await ctx.reply(MESSAGES.REGISTRATION_7, Markup.removeKeyboard());
 
-    console.log(ctx.session);
-    ctx.scene.leave();
+    await ctx.reply(MESSAGES.REGISTRATION_8, iAmSellerKeyboards.step7());
+
+    await ctx.scene.leave();
   }
 
-  @Action(CALLBACK_NAMES.REGISTRATION_EDIT_ALL)
+  @WizardStep(7)
+  @Hears(MESSAGES.EDIT_AGAIN)
   async editAgain(@Ctx() ctx: Scenes.WizardContext) {
     await ctx.scene.reenter();
-  }
-
-  @Action(CALLBACK_NAMES.REGISTRATION_EDIT_NAME)
-  async editName(@Ctx() ctx: Scenes.WizardContext & any) {
-    console.log('hello');
-    ctx.wizard.state.name = 'from_aaaaa';
-
-    await ctx.wizard.next();
   }
 }
