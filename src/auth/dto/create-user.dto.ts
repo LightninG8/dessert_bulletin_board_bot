@@ -5,4 +5,29 @@ export class CreateUserDto {
 
   @IsNotEmpty()
   readonly name: string;
+
+  type: 'seller' | 'consumer';
+
+  photo: string | null;
+
+  city: string;
+
+  about: string;
+
+  contacts: string;
+
+  location?: {
+    latitude: number;
+    longitude: number;
+    formattedAddress: string;
+    country: string;
+    city: string;
+    state: string;
+    zipcode: string;
+    streetName: string;
+    streetNumber: string;
+    countryCode: string;
+    neighbourhood: string;
+    provider: string;
+  } | null;
 }

@@ -16,7 +16,3 @@ export function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
 function deg2rad(deg) {
   return deg * (Math.PI / 180);
 }
-
-const distanceMOWBKK = getDistanceFromLatLonInKm(55.45, 37.36, 13.45, 100.3);
-
-console.log(distanceMOWBKK);

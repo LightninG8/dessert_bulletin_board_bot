@@ -25,7 +25,6 @@ import { startKeyboards } from 'src/bot/keyboards';
 export class StartScene {
   @SceneEnter()
   async enter(@Ctx() ctx: SceneContext & any) {
-    console.log(ctx.update.message.from);
     await ctx.reply(MESSAGES.START, startKeyboards.start());
   }
 

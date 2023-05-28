@@ -1,27 +1,27 @@
-import {
-  Action,
-  Context as Ctx,
-  Hears,
-  On,
-  Wizard,
-  WizardStep,
-} from 'nestjs-telegraf';
-import { SCENES, MESSAGES, CALLBACK_NAMES } from 'src/commonConstants';
-import { TelegrafExceptionFilter, tabsFormatter } from 'src/common';
-import { UseFilters } from '@nestjs/common';
+import { Context as Ctx, Hears, On, Wizard, WizardStep } from 'nestjs-telegraf';
+import { SCENES, MESSAGES } from 'src/commonConstants';
+import { TelegrafExceptionFilter, getUserId, tabsFormatter } from 'src/common';
+import { Inject, UseFilters } from '@nestjs/common';
 import { GeocoderService } from 'src/geocoder';
 import { Markup, Scenes } from 'telegraf';
 import { iAmSellerKeyboards } from 'src/bot/keyboards';
+import { UsersService } from 'src/database';
 
 @UseFilters(TelegrafExceptionFilter)
 @Wizard(SCENES.I_AM_SELLER_SCENE)
 export class IAmSellerScene {
-  constructor(private geocoderService: GeocoderService) {}
+  constructor(
+    private geocoderService: GeocoderService,
+    private usersService: UsersService,
+  ) {}
 
   // Отправьте геолокацию
   @WizardStep(1)
   step1(@Ctx() ctx: Scenes.WizardContext & any) {
     ctx.wizard.state.user = {};
+
+    ctx.wizard.state.user.telegram_id = getUserId(ctx);
+    ctx.wizard.state.user.type = 'seller';
 
     ctx.reply(MESSAGES.REGISTRATION_1, iAmSellerKeyboards.step1());
 
@@ -40,8 +40,10 @@ export class IAmSellerScene {
         return res[0];
       });
 
-    if (location.city == null) {
+    if (!location.city) {
       ctx.reply('Не получилось определить геолокацию. Напишите текстом');
+
+      ctx.wizard.state.user.location = null;
     } else {
       ctx.wizard.state.user.city = location.city;
       ctx.wizard.state.user.location = location;
@@ -58,6 +60,7 @@ export class IAmSellerScene {
   // Shitcode. Хз какой интерфейс под сообщение с локацией
   async step2Text(@Ctx() ctx: Scenes.WizardContext & any) {
     ctx.wizard.state.user.city = ctx.update.message.text;
+    ctx.wizard.state.user.location = null;
 
     await ctx.reply(MESSAGES.REGISTRATION_2, iAmSellerKeyboards.step2());
 
@@ -68,7 +71,8 @@ export class IAmSellerScene {
   @WizardStep(3)
   @On('photo')
   async step3(@Ctx() ctx: Scenes.WizardContext & any) {
-    ctx.wizard.state.user.photo = ctx.update.message.photo.pop().file_id;
+    ctx.wizard.state.user.photo =
+      ctx.update.message.photo.pop().file_id || null;
 
     await ctx.reply(MESSAGES.REGISTRATION_3, iAmSellerKeyboards.step3());
 
@@ -83,8 +87,6 @@ export class IAmSellerScene {
 
     ctx.wizard.state.user.photo = photo || null;
 
-    console.log(user);
-
     await ctx.reply(MESSAGES.REGISTRATION_3, iAmSellerKeyboards.step3());
 
     ctx.wizard.next();
@@ -92,6 +94,7 @@ export class IAmSellerScene {
 
   // Описание
   @WizardStep(4)
+  @On('text')
   @Hears(MESSAGES.TAKE_FROM_PROFILE)
   async takeNameFromProdile(@Ctx() ctx: Scenes.WizardContext & any) {
     const { first_name, last_name } = ctx.update.message.from;
@@ -104,6 +107,7 @@ export class IAmSellerScene {
   }
 
   @WizardStep(4)
+  @On('text')
   async step4(@Ctx() ctx: Scenes.WizardContext & any) {
     ctx.wizard.state.user.name = ctx.update.message.text;
 
@@ -114,6 +118,7 @@ export class IAmSellerScene {
 
   // Контакты
   @WizardStep(5)
+  @On('text')
   async step5(@Ctx() ctx: Scenes.WizardContext & any) {
     ctx.wizard.state.user.about = ctx.update.message.text;
 
@@ -124,6 +129,7 @@ export class IAmSellerScene {
 
   // Подтверждение
   @WizardStep(6)
+  @On('text')
   async step6(@Ctx() ctx: Scenes.WizardContext & any) {
     ctx.wizard.state.user.contacts = ctx.update.message.text;
 
@@ -146,16 +152,20 @@ ${MESSAGES.REGISTRATION_6}
     ctx.wizard.next();
   }
 
+  // Регистрация закончена
   @WizardStep(7)
   @Hears(MESSAGES.CONFIRM)
-  async step7(@Ctx() ctx: Scenes.WizardContext) {
+  async step7(@Ctx() ctx: Scenes.WizardContext & any) {
     await ctx.reply(MESSAGES.REGISTRATION_7, Markup.removeKeyboard());
+
+    this.usersService.registration(ctx.wizard.state.user);
 
     await ctx.reply(MESSAGES.REGISTRATION_8, iAmSellerKeyboards.step7());
 
     await ctx.scene.leave();
   }
 
+  // Заполнить снова
   @WizardStep(7)
   @Hears(MESSAGES.EDIT_AGAIN)
   async editAgain(@Ctx() ctx: Scenes.WizardContext) {

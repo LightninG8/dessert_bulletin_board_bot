@@ -30,7 +30,6 @@ export class GeocoderService {
     return this.geocoder
       .geocode(address)
       .then((res) => {
-        console.log(res);
         return res.json();
       })
       .catch((err) => {
