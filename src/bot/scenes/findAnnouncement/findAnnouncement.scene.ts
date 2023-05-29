@@ -60,6 +60,19 @@ export class FindAnnouncementScene {
         ctx.reply(MESSAGES.SELECT_TITLE, Markup.removeKeyboard());
         break;
       case 'recommendations':
+        await this.getRecommendedAnnouncements(ctx);
+
+        if (!ctx.scene.state.announcements.length) {
+          return;
+        }
+
+        await ctx.reply(
+          MESSAGES.ANNOUNCEMENTS_FOUND(ctx.scene.state.announcements.length),
+          Markup.removeKeyboard(),
+        );
+
+        await this.showAnnouncement(ctx);
+
         break;
     }
   }
@@ -78,10 +91,6 @@ export class FindAnnouncementScene {
 
   @On('text')
   async onText(@Ctx() ctx: Scenes.WizardContext & any) {
-    if (!ctx.scene.state.isInput) {
-      return;
-    }
-
     switch (ctx.scene.state.type) {
       case 'category':
         const category = ctx.update.message.text.split(' ').slice(1).join(' ');
@@ -103,6 +112,10 @@ export class FindAnnouncementScene {
         await this.getAnnouncementsByTitle(ctx, title);
 
         break;
+    }
+
+    if (!ctx.scene.state.announcements.length) {
+      return;
     }
 
     await ctx.reply(
@@ -128,16 +141,46 @@ export class FindAnnouncementScene {
         Markup.removeKeyboard(),
       );
 
-      await ctx.scene.leave();
+      await this.onMainMenu(ctx);
     }
 
     ctx.scene.state.announcements = announcements;
   }
 
   async getAnnouncementsByTitle(ctx: SceneContext & any, title: string) {
-    await ctx.reply(title + ' ' + ctx.scene.state.user.city);
+    const city = ctx.scene.state.user.city;
 
-    await ctx.scene.leave();
+    const announcements =
+      await this.announcementsService.findAnnouncementsByTitleAndCity(
+        city,
+        title,
+      );
+
+    if (!announcements?.length) {
+      await ctx.reply(
+        MESSAGES.FIND_DESSERT_BY_TITLE_ERROR,
+        Markup.removeKeyboard(),
+      );
+
+      await this.onMainMenu(ctx);
+    }
+
+    ctx.scene.state.announcements = announcements;
+  }
+
+  async getRecommendedAnnouncements(ctx: SceneContext & any) {
+    const city = ctx.scene.state.user.city;
+
+    const announcements =
+      await this.announcementsService.findRecommendedAnnouncements(city);
+
+    if (!announcements?.length) {
+      await ctx.reply(MESSAGES.RECOMMENDATIONS_ERROR, Markup.removeKeyboard());
+
+      await this.onMainMenu(ctx);
+    }
+
+    ctx.scene.state.announcements = shuffle(announcements);
   }
 
   async showAnnouncement(@Ctx() ctx: Scenes.WizardContext & any) {

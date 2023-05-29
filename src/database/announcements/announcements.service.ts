@@ -5,6 +5,7 @@ import { AddAnnouncementDto } from 'src/auth';
 import { Announcement, AnnouncementDocument } from '../schemas';
 import { CountersService } from '../counters';
 import { UsersService } from '../users';
+import { shuffle } from 'src/common';
 
 @Injectable()
 export class AnnouncementsService {
@@ -87,6 +88,29 @@ export class AnnouncementsService {
     const docs = await this.announcementModel.collection
       .find({
         category: category,
+        city: city,
+      })
+      .sort({ id: -1 })
+      .toArray();
+
+    return docs;
+  }
+
+  async findAnnouncementsByTitleAndCity(city: string, title: string) {
+    const docs = await this.announcementModel.collection
+      .find({
+        title: new RegExp(`${title}`, 'gmi'),
+        city: city,
+      })
+      .sort({ id: -1 })
+      .toArray();
+
+    return docs;
+  }
+
+  async findRecommendedAnnouncements(city: string) {
+    const docs = await this.announcementModel.collection
+      .find({
         city: city,
       })
       .sort({ id: -1 })

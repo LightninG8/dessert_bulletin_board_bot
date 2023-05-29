@@ -12,9 +12,9 @@ export class SellerGuard implements CanActivate {
     const { from } = ctx.getContext<Context>();
 
     const isAdmin = this.ADMIN_IDS.includes(from.id);
-    if (!isAdmin) {
-      throw new TelegrafException(MESSAGES.REGISTRATION_PROHIBITED);
-    }
+    // if (!isAdmin) {
+    //   throw new TelegrafException(MESSAGES.REGISTRATION_PROHIBITED);
+    // }
 
     return true;
   }

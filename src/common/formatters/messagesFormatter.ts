@@ -7,7 +7,9 @@ export const announcementFormatter = ({
   location,
   contacts,
 }) => {
-  const address = location ? location.formattedAddress : city;
+  const address = location
+    ? `${location.city}, ${location.streetName} ${location.streetNumber}`
+    : city;
 
   return `
 ${title}
