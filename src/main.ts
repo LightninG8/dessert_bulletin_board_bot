@@ -7,6 +7,6 @@ async function bootstrap() {
     bufferLogs: true,
   });
   app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
-  await app.listen(3000);
+  await app.listen(3001);
 }
 bootstrap();
