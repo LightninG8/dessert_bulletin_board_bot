@@ -4,9 +4,8 @@ import {
   TelegrafExceptionFilter,
   getUserId,
   mySellerProfileFormatter,
-  tabsFormatter,
 } from 'src/common';
-import { Inject, UseFilters } from '@nestjs/common';
+import { UseFilters } from '@nestjs/common';
 import { GeocoderService } from 'src/geocoder';
 import { Markup, Scenes } from 'telegraf';
 import { iAmSellerKeyboards } from 'src/bot/keyboards';

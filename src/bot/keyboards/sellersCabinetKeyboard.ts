@@ -16,6 +16,12 @@ export const sellersCabinetKeyboard = {
         ],
         [
           {
+            text: MESSAGES.ADD_ANNOUNCEMENT,
+            callback_data: CALLBACK_NAMES.NEW_ANNOUNCEMENT,
+          },
+        ],
+        [
+          {
             text: MESSAGES.EXIT,
             callback_data: CALLBACK_NAMES.EXIT,
           },

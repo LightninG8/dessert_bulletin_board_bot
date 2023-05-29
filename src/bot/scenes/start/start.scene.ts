@@ -32,6 +32,10 @@ export class StartScene {
   async onIAmConsumer(
     @Ctx() ctx: Context & { update: Update.CallbackQueryUpdate },
   ) {
+    ctx.answerCbQuery();
+
+    await ctx.deleteMessage();
+
     await ctx.scene.enter(SCENES.I_AM_CONSUMER_SCENE);
   }
 

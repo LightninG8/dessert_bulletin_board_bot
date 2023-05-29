@@ -140,6 +140,6 @@ export class NewAnnouncementScene {
 
     await ctx.reply(MESSAGES.ANNOUNCEMENT_ADDED, Markup.removeKeyboard());
 
-    await ctx.scene.leave();
+    await ctx.scene.enter(SCENES.SELLER_CABINET);
   }
 }

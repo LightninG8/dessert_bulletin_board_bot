@@ -3,7 +3,12 @@ export const announcementFormatter = ({
   description,
   price,
   category,
+  city,
+  location,
+  contacts,
 }) => {
+  const address = location ? location.formattedAddress : city;
+
   return `
 ${title}
 
@@ -12,14 +17,21 @@ ${title}
 Категория: ${category}
 
 Стоимость: ${price} рублей
+
+Адрес: ${address}
+
+Контакты: ${contacts}
 `;
 };
 
 export const mySellerProfileFormatter = ({ name, city, about, contacts }) => {
   return `
 Имя: ${name}
+
 Город: ${city}
+
 Описание: ${about}
+
 Контакты: ${contacts}
 `;
 };

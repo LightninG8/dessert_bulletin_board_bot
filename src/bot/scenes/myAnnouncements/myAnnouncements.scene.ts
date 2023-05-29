@@ -156,13 +156,13 @@ export class MyAnnouncementsScene {
     await ctx.scene.reenter();
   }
 
-  @Action(CALLBACK_NAMES.EXIT)
-  async exit(@Ctx() ctx: Context & { update: Update.CallbackQueryUpdate }) {
+  @Action(CALLBACK_NAMES.BACK)
+  async back(@Ctx() ctx: Context & { update: Update.CallbackQueryUpdate }) {
     ctx.answerCbQuery();
 
     await ctx.deleteMessage();
 
-    await ctx.scene.leave();
+    await ctx.scene.enter(SCENES.SELLER_CABINET);
   }
 
   @Action(new RegExp(`EDIT_ANNOUNCEMENT_[A-Z]+:[0-9]+`))
@@ -247,12 +247,8 @@ export class MyAnnouncementsScene {
 
   @SceneLeave()
   async onSceneLeave(@Ctx() ctx: SceneContext & any) {
-    // await ctx.reply(MESSAGES.EXIT_FROM_SELLER_CABINET);
-
     ctx.scene.state.isEditing = false;
     ctx.scene.state.editType = null;
     ctx.scene.state.editingId = null;
-
-    await ctx.scene.enter(SCENES.SELLER_CABINET);
   }
 }

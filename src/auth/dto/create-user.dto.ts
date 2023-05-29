@@ -23,13 +23,13 @@ export class CreateUserDto {
 
   type: 'seller' | 'consumer';
 
-  photo: string | null;
+  photo?: string | null;
 
   city: string;
 
-  about: string;
+  about?: string;
 
-  contacts: string;
+  contacts?: string;
 
   location?: ILocation | null;
 }

@@ -48,6 +48,7 @@ export class User {
   @Prop({ required: true, unique: true })
   telegram_id: number;
 
+  @Prop({ required: true })
   @Prop()
   name: string;
 
@@ -55,19 +56,20 @@ export class User {
   type: 'seller' | 'consumer';
 
   @Prop()
-  photo: string | null;
+  photo?: string | null;
 
+  @Prop({ required: true })
   @Prop()
   city: string;
 
   @Prop()
-  about: string;
+  about?: string;
 
   @Prop()
-  contacts: string;
+  contacts?: string;
 
   @Prop({ required: true })
-  announcements: string[];
+  announcements?: string[];
 
   @Prop({ type: UserLocation })
   location?: UserLocation | null;

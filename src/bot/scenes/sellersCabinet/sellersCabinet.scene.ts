@@ -29,6 +29,14 @@ export class SellersCabinetScene {
     await ctx.scene.enter(SCENES.MY_SELLER_PROFILE);
   }
 
+  @Action(CALLBACK_NAMES.NEW_ANNOUNCEMENT)
+  async onNewAnnouncement(@Ctx() ctx: SceneContext & any) {
+    await ctx.answerCbQuery();
+    await ctx.deleteMessage();
+
+    await ctx.scene.enter(SCENES.NEW_ANNOUNCEMENT);
+  }
+
   @Action(CALLBACK_NAMES.EXIT)
   async onSceneLeave(@Ctx() ctx: SceneContext & any) {
     await ctx.answerCbQuery();

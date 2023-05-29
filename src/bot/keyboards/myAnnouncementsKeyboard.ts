@@ -15,8 +15,8 @@ export const myAnnouncementsKeyboards = {
         ),
         [
           {
-            text: MESSAGES.EXIT,
-            callback_data: CALLBACK_NAMES.EXIT,
+            text: MESSAGES.BACK,
+            callback_data: CALLBACK_NAMES.BACK,
           },
         ],
       ],

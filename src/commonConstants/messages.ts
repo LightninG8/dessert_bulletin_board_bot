@@ -16,7 +16,7 @@ export const MESSAGES = {
   CHANGES_SAVED: 'Изменения сохранены',
   SELLER_CABINET: 'Вы вошли в кабинет продавца',
 
-  REGISTRATION_1: 'Укажите ваш город (или отправьте геометку)',
+  REGISTRATION_1: 'Укажите ваш город (или отправьте геолокацию)',
   REGISTRATION_2: 'Отправьте фотографию',
   REGISTRATION_3: 'Введите имя',
   REGISTRATION_4: 'Напишите о себе',
@@ -24,6 +24,8 @@ export const MESSAGES = {
   REGISTRATION_6: 'Проверьте правильность введённых данных, всё вверно?',
   REGISTRATION_7: 'Отлично, ваш профиль заполнен!',
   REGISTRATION_8: 'Предлагаю добавить первое объявление',
+
+  REGISTRARION_CONSUMER: 'Укажите ваш город (или отправьте геометку)',
 
   SEND_LOCATION: 'Отправить геолокацию',
   TAKE_FROM_PROFILE: 'Взять из профиля',
