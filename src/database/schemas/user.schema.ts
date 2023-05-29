@@ -66,8 +66,8 @@ export class User {
   @Prop()
   contacts: string;
 
-  // @Prop()
-  // location?: UserLocation;
+  @Prop({ required: true })
+  announcements: string[];
 
   @Prop({ type: UserLocation })
   location?: UserLocation | null;

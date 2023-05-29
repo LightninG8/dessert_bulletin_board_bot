@@ -1,11 +1,24 @@
 import { Module } from '@nestjs/common';
 import { BotUpdate } from './bot.update';
-import { IAmConsumerScene, StartScene, IAmSellerScene } from './scenes';
+import {
+  IAmConsumerScene,
+  StartScene,
+  IAmSellerScene,
+  MyAnnouncementsScene,
+} from './scenes';
 import { GeocoderModule } from 'src/geocoder';
-import { UsersModule } from 'src/database';
+import { AnnouncementsModule, CountersModule, UsersModule } from 'src/database';
+import { NewAnnouncementScene } from './scenes/newAnnouncement';
 
 @Module({
-  imports: [GeocoderModule, UsersModule],
-  providers: [BotUpdate, StartScene, IAmConsumerScene, IAmSellerScene],
+  imports: [GeocoderModule, UsersModule, AnnouncementsModule, CountersModule],
+  providers: [
+    BotUpdate,
+    StartScene,
+    IAmConsumerScene,
+    IAmSellerScene,
+    NewAnnouncementScene,
+    MyAnnouncementsScene,
+  ],
 })
 export class BotModule {}

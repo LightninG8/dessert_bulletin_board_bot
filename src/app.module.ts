@@ -21,6 +21,8 @@ import { session } from 'telegraf-session-mongodb';
 // import * as LocalSession from 'telegraf-session-local';
 import { Context, Telegraf } from 'telegraf';
 import { Connection } from 'mongoose';
+import * as mediaGroup from 'telegraf-media-group';
+import { CountersModule } from './database';
 
 // const sessions = new LocalSession({ database: 'session_db.json' });
 
@@ -64,6 +66,7 @@ import { Connection } from 'mongoose';
     LoggerModule,
     BotModule,
     GeocoderModule,
+    CountersModule,
   ],
   controllers: [],
   providers: [],
@@ -74,5 +77,6 @@ export class AppModule {
     @InjectConnection() private connection: Connection,
   ) {
     this.bot.use(session(this.connection.db, { collectionName: 'sessions' }));
+    this.bot.use(mediaGroup());
   }
 }

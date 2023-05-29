@@ -2,14 +2,23 @@ import { Action, Command, Ctx, Start, Update } from 'nestjs-telegraf';
 import { Inject, UseFilters, UseGuards } from '@nestjs/common';
 import { Logger } from 'winston';
 import { Context } from 'src/interfaces';
-import { SellerGuard, TelegrafExceptionFilter } from 'src/common';
+import {
+  AnnouncementsLimitGuard,
+  AuthGuard,
+  SellerGuard,
+  TelegrafExceptionFilter,
+} from 'src/common';
 import { CALLBACK_NAMES, SCENES } from 'src/commonConstants';
 import { Scenes } from 'telegraf';
+import { CountersService } from 'src/database';
 
 @Update()
 @UseFilters(TelegrafExceptionFilter)
 export class BotUpdate {
-  constructor(@Inject('winston') private readonly logger: Logger) {}
+  constructor(
+    @Inject('winston') private readonly logger: Logger,
+    private countersService: CountersService,
+  ) {}
 
   @Start()
   async onStart(@Ctx() ctx: Context) {
@@ -22,13 +31,29 @@ export class BotUpdate {
     await ctx.reply('Сообщение для админов');
   }
 
+  @UseGuards(AnnouncementsLimitGuard)
   @UseGuards(SellerGuard)
   @Action(CALLBACK_NAMES.NEW_ANNOUNCEMENT)
-  async newAnnouncement(@Ctx() ctx: Scenes.WizardContext & any) {
+  async newAnnouncementAction(@Ctx() ctx: Scenes.WizardContext & any) {
     await ctx.editMessageReplyMarkup({
       reply_markup: { remove_keyboard: true },
     });
 
-    ctx.reply('!!!! Перевод на новое объявление');
+    await ctx.scene.enter(SCENES.NEW_ANNOUNCEMENT);
+  }
+
+  @UseGuards(AnnouncementsLimitGuard)
+  @UseGuards(SellerGuard)
+  @UseGuards(AuthGuard)
+  @Command('new_announcement')
+  async newAnnouncement(@Ctx() ctx: Context) {
+    await ctx.scene.enter(SCENES.NEW_ANNOUNCEMENT);
+  }
+
+  @UseGuards(SellerGuard)
+  @UseGuards(AuthGuard)
+  @Command('my_announcements')
+  async myAnnouncements(@Ctx() ctx: Context) {
+    await ctx.scene.enter(SCENES.MY_ANNOUNCEMENTS);
   }
 }
