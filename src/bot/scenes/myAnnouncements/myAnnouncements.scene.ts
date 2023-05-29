@@ -1,4 +1,11 @@
-import { Action, Ctx, On, Scene, SceneEnter } from 'nestjs-telegraf';
+import {
+  Action,
+  Ctx,
+  On,
+  Scene,
+  SceneEnter,
+  SceneLeave,
+} from 'nestjs-telegraf';
 import { SceneContext } from 'telegraf/typings/scenes';
 import { Update } from 'telegraf/typings/core/types/typegram';
 import { CALLBACK_NAMES, SCENES, MESSAGES } from 'src/commonConstants';
@@ -155,7 +162,6 @@ export class MyAnnouncementsScene {
 
     await ctx.deleteMessage();
 
-    await ctx.reply(MESSAGES.EXIT_FROM_SELLERS_PROFILE);
     await ctx.scene.leave();
   }
 
@@ -178,7 +184,7 @@ export class MyAnnouncementsScene {
     ctx.scene.state.editingId = id;
 
     const editMessages = {
-      TITLE: MESSAGES.INPUT_NAME,
+      TITLE: MESSAGES.INPUT_TITLE,
       DESCRIPTION: MESSAGES.INPUT_DESCRIPTION,
       CATEGORY: MESSAGES.INPUT_CATEGORIES,
       PHOTO: MESSAGES.INPUT_PHOTOS,
@@ -214,7 +220,7 @@ export class MyAnnouncementsScene {
       PHOTO: 'photo',
     };
 
-    this.announcementsService.changeAnnouncement(id, {
+    await this.announcementsService.changeAnnouncement(id, {
       [announcemetKeys[type]]: userAnswer,
     });
 
@@ -237,5 +243,16 @@ export class MyAnnouncementsScene {
       ...myAnnouncementsKeyboards.announcement(announcement),
       caption: announcementFormatter(announcement),
     });
+  }
+
+  @SceneLeave()
+  async onSceneLeave(@Ctx() ctx: SceneContext & any) {
+    // await ctx.reply(MESSAGES.EXIT_FROM_SELLER_CABINET);
+
+    ctx.scene.state.isEditing = false;
+    ctx.scene.state.editType = null;
+    ctx.scene.state.editingId = null;
+
+    await ctx.scene.enter(SCENES.SELLER_CABINET);
   }
 }

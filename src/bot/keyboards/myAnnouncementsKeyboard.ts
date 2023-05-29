@@ -51,7 +51,7 @@ export const myAnnouncementsKeyboards = {
       inline_keyboard: [
         [
           {
-            text: MESSAGES.NAME,
+            text: MESSAGES.TITLE,
             callback_data: `${CALLBACK_NAMES.EDIT_ANNOUNCEMENT_TITLE}:${announcement.id}`,
           },
           {

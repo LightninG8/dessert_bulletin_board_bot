@@ -38,7 +38,7 @@ export class NewAnnouncementScene {
 
     ctx.wizard.state.user = user;
 
-    await ctx.reply(MESSAGES.INPUT_NAME, Markup.removeKeyboard());
+    await ctx.reply(MESSAGES.INPUT_TITLE, Markup.removeKeyboard());
 
     await ctx.wizard.next();
   }

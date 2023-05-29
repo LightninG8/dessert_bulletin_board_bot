@@ -5,6 +5,8 @@ import {
   StartScene,
   IAmSellerScene,
   MyAnnouncementsScene,
+  SellersCabinetScene,
+  MySellerProfileScene,
 } from './scenes';
 import { GeocoderModule } from 'src/geocoder';
 import { AnnouncementsModule, CountersModule, UsersModule } from 'src/database';
@@ -19,6 +21,8 @@ import { NewAnnouncementScene } from './scenes/newAnnouncement';
     IAmSellerScene,
     NewAnnouncementScene,
     MyAnnouncementsScene,
+    SellersCabinetScene,
+    MySellerProfileScene,
   ],
 })
 export class BotModule {}

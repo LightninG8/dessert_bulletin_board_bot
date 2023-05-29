@@ -51,9 +51,17 @@ export class UsersService {
   }
 
   async getUserById(userId: number) {
-    return this.usersModel.collection.findOne({
-      telegram_id: userId,
-    });
+    let result = null;
+
+    await this.usersModel.collection
+      .findOne({
+        telegram_id: userId,
+      })
+      .then((res) => {
+        result = res;
+      });
+
+    return result;
   }
 
   async addAnnouncementToUser(userId: number, announcementId: number) {
@@ -86,5 +94,14 @@ export class UsersService {
       });
 
     return result;
+  }
+
+  async changeUser(userId: number, obj: object) {
+    await this.usersModel.collection.updateOne(
+      { telegram_id: userId },
+      {
+        $set: obj,
+      },
+    );
   }
 }

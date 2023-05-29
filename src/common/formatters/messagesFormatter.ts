@@ -14,3 +14,12 @@ ${title}
 Стоимость: ${price} рублей
 `;
 };
+
+export const mySellerProfileFormatter = ({ name, city, about, contacts }) => {
+  return `
+Имя: ${name}
+Город: ${city}
+Описание: ${about}
+Контакты: ${contacts}
+`;
+};

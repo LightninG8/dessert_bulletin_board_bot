@@ -1,6 +1,11 @@
 import { Context as Ctx, Hears, On, Wizard, WizardStep } from 'nestjs-telegraf';
 import { SCENES, MESSAGES } from 'src/commonConstants';
-import { TelegrafExceptionFilter, getUserId, tabsFormatter } from 'src/common';
+import {
+  TelegrafExceptionFilter,
+  getUserId,
+  mySellerProfileFormatter,
+  tabsFormatter,
+} from 'src/common';
 import { Inject, UseFilters } from '@nestjs/common';
 import { GeocoderService } from 'src/geocoder';
 import { Markup, Scenes } from 'telegraf';
@@ -133,20 +138,12 @@ export class IAmSellerScene {
   async step6(@Ctx() ctx: Scenes.WizardContext & any) {
     ctx.wizard.state.user.contacts = ctx.update.message.text;
 
-    const { name, photo, city, about, contacts } = ctx.wizard.state.user;
+    const { photo } = ctx.wizard.state.user;
 
+    await ctx.reply(MESSAGES.REGISTRATION_6);
     await ctx.replyWithPhoto(photo, {
       ...iAmSellerKeyboards.step6(),
-      caption: tabsFormatter(
-        `
-${MESSAGES.REGISTRATION_6}
-
-Имя: ${name}
-Город: ${city}
-Описание: ${about}
-Контакты: ${contacts}
-        `,
-      ),
+      caption: mySellerProfileFormatter(ctx.wizard.state.user),
     });
 
     ctx.wizard.next();

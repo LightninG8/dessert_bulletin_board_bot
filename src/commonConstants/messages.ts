@@ -12,8 +12,9 @@ export const MESSAGES = {
   TRY_TO_DELETE_ANNOUNCEMENT:
     'Вы точно хотите удалить это объявление? После удаления восстановить его будет невозможно',
   ANNOUNCEMENT_DELETED: 'Объявление удалено',
-  EXIT_FROM_SELLERS_PROFILE: 'Вы вышли из профиля продавца',
+  EXIT_FROM_SELLER_CABINET: 'Вы вышли из кабинета продавца',
   CHANGES_SAVED: 'Изменения сохранены',
+  SELLER_CABINET: 'Вы вошли в кабинет продавца',
 
   REGISTRATION_1: 'Укажите ваш город (или отправьте геометку)',
   REGISTRATION_2: 'Отправьте фотографию',
@@ -31,12 +32,12 @@ export const MESSAGES = {
   DELETE: 'Удалить',
   BACK: '<<< Назад',
   CANCEL: 'Отмена',
-  EXIT: 'Выйти',
+  EXIT: '❌ Выйти',
 
   CONFIRM: 'Да, всё верно',
   ADD_ANNOUNCEMENT: 'Добавить объявление',
 
-  INPUT_NAME: 'Введите Название',
+  INPUT_TITLE: 'Введите Название',
   INPUT_DESCRIPTION: 'Введите Описание',
   INPUT_PHOTOS: 'Отправьте фото',
   INPUT_CATEGORIES: 'Выберите категорию',
@@ -44,11 +45,18 @@ export const MESSAGES = {
   CHECK_THE_CORRECTNESS: 'Проверь, всё ли верно?',
   ANNOUNCEMENT_ADDED: 'Объявление добавлено',
 
-  NAME: 'Название',
+  TITLE: 'Название',
+  NAME: 'Имя',
   DESCRIPTION: 'Описание',
   PHOTO: 'Фото',
   CATEGORIY: 'Категория',
   PRICE: 'Стоимость',
+  CONTACTS: 'Контакты',
+  ABOUT: 'О себе',
+  CITY: 'Город',
 
   MY_ANNOUNCEMENTS: 'Ваши объявления',
+
+  MY_ANNOUNCEMENTS_BUTTON: 'Мои объявления',
+  MY_SELLER_PROFILE: 'Мой профиль',
 };

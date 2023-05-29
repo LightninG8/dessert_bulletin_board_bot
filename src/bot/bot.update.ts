@@ -50,10 +50,17 @@ export class BotUpdate {
     await ctx.scene.enter(SCENES.NEW_ANNOUNCEMENT);
   }
 
+  // @UseGuards(SellerGuard)
+  // @UseGuards(AuthGuard)
+  // @Command('my_announcements')
+  // async myAnnouncements(@Ctx() ctx: Context) {
+  //   await ctx.scene.enter(SCENES.MY_ANNOUNCEMENTS);
+  // }
+
   @UseGuards(SellerGuard)
   @UseGuards(AuthGuard)
-  @Command('my_announcements')
-  async myAnnouncements(@Ctx() ctx: Context) {
-    await ctx.scene.enter(SCENES.MY_ANNOUNCEMENTS);
+  @Command('seller_cabinet')
+  async sellersCabinet(@Ctx() ctx: Context) {
+    await ctx.scene.enter(SCENES.SELLER_CABINET);
   }
 }

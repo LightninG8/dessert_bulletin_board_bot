@@ -12,11 +12,7 @@ export class AuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const ctx = TelegrafExecutionContext.create(context).getContext<Context>();
 
-    let user = null;
-
-    await this.userService.getUserById(getUserId(ctx)).then((res) => {
-      user = res;
-    });
+    const user = await this.userService.getUserById(getUserId(ctx));
 
     if (!user) {
       throw new TelegrafException(MESSAGES.NEED_REGISTRATION);
