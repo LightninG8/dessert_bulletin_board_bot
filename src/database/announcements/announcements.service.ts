@@ -83,6 +83,18 @@ export class AnnouncementsService {
     return docs;
   }
 
+  async findAnnouncementsByCategoryAndCity(city: string, category: string) {
+    const docs = await this.announcementModel.collection
+      .find({
+        category: category,
+        city: city,
+      })
+      .sort({ id: -1 })
+      .toArray();
+
+    return docs;
+  }
+
   async changeAnnouncement(announcementId: number, obj: object) {
     await this.announcementModel.collection.updateOne(
       { id: announcementId },

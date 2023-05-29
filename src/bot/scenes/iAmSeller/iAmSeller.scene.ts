@@ -63,7 +63,9 @@ export class IAmSellerScene {
   @On('text')
   // Shitcode. Хз какой интерфейс под сообщение с локацией
   async step2Text(@Ctx() ctx: Scenes.WizardContext & any) {
-    ctx.wizard.state.user.city = ctx.update.message.text;
+    const text = String(ctx.update.message.text).toLowerCase();
+
+    ctx.wizard.state.user.city = text.charAt(0).toUpperCase() + text.slice(1);
     ctx.wizard.state.user.location = null;
 
     await ctx.reply(MESSAGES.REGISTRATION_2, iAmSellerKeyboards.step2());

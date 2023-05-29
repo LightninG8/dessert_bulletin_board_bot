@@ -12,23 +12,16 @@ import { UsersService } from 'src/database';
 import { GeocoderService } from 'src/geocoder';
 import { Scenes } from 'telegraf';
 
-@Scene(SCENES.I_AM_CONSUMER_SCENE)
-export class IAmConsumerScene {
+@Scene(SCENES.EDIT_LOCATION_SCENE)
+export class EditLocationScene {
   constructor(
     private geocoderService: GeocoderService,
     private usersService: UsersService,
   ) {}
   @SceneEnter()
   async onEnter(@Ctx() ctx: Scenes.SceneContext & any) {
-    const user = await this.usersService.getUserById(getUserId(ctx));
-    const { first_name, last_name } = ctx.from;
-
     ctx.scene.state.inputType = 'location';
-    ctx.scene.state.user = {
-      telegram_id: getUserId(ctx),
-      type: user?.type || 'consumer',
-      name: user?.name || first_name + ' ' + last_name,
-    };
+    ctx.scene.state.user = {};
 
     ctx.reply(MESSAGES.REGISTRARION_CONSUMER, iAmConsumerKeyboards.enter());
   }
@@ -85,6 +78,9 @@ export class IAmConsumerScene {
 
     replyMainMenuMessage(ctx);
 
-    await this.usersService.registration(ctx.scene.state.user);
+    await this.usersService.changeUser(
+      ctx.update.message.from.id,
+      ctx.scene.state.user,
+    );
   }
 }

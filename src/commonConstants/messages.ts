@@ -35,6 +35,7 @@ export const MESSAGES = {
   BACK: '<<< Назад',
   CANCEL: 'Отмена',
   EXIT: '❌ Выйти',
+  NEXT: 'Далее',
 
   CONFIRM: 'Да, всё верно',
   ADD_ANNOUNCEMENT: 'Добавить объявление',
@@ -61,4 +62,20 @@ export const MESSAGES = {
 
   MY_ANNOUNCEMENTS_BUTTON: 'Мои объявления',
   MY_SELLER_PROFILE: 'Мой профиль',
+
+  FIND_DESSERT_BY_CATEGORY: 'Найти десерт по категории',
+  FIND_DESSERT_BY_TITLE: 'Найти десерт по названию',
+  RECOMMENDATIONS: 'Лента рекомендаций',
+  EDIT_LOCATION: 'Изменить город',
+
+  MAIN_MENU: 'Выберите что нужно сделать',
+
+  SELECT_CATEGORY: 'Выберите категорию',
+  SELECT_TITLE: 'Введите название',
+
+  FIND_DESSERT_BY_CATEGORY_ERROR: 'В этой категории ещё нет объявлений',
+  FIND_DESSERT_BY_TITLE_ERROR: 'Объявлений с таким названием не найдено',
+  RECOMMENDATIONS_ERROR: 'Рекомендаций не найдено',
+  ANNOUNCEMENTS_FOUND: (count: number) => `Найдено ${count} объявлений`,
+  ALL_ANNOUNCEMENTS_VIEWED: 'Вы посмотрели все объявления',
 };

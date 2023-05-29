@@ -77,6 +77,5 @@ export class AppModule {
     @InjectConnection() private connection: Connection,
   ) {
     this.bot.use(session(this.connection.db, { collectionName: 'sessions' }));
-    this.bot.use(mediaGroup());
   }
 }

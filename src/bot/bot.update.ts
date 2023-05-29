@@ -1,4 +1,11 @@
-import { Action, Command, Ctx, Start, Update } from 'nestjs-telegraf';
+import {
+  Action,
+  Command,
+  Ctx,
+  InjectBot,
+  Start,
+  Update,
+} from 'nestjs-telegraf';
 import { Inject, UseFilters, UseGuards } from '@nestjs/common';
 import { Logger } from 'winston';
 import { Context } from 'src/interfaces';
@@ -7,15 +14,17 @@ import {
   AuthGuard,
   SellerGuard,
   TelegrafExceptionFilter,
+  replyMainMenuMessage,
 } from 'src/common';
-import { CALLBACK_NAMES, SCENES } from 'src/commonConstants';
-import { Scenes } from 'telegraf';
+import { BOT_NAME, CALLBACK_NAMES, SCENES } from 'src/commonConstants';
+import { Scenes, Telegraf } from 'telegraf';
 import { CountersService } from 'src/database';
-
+import { ReplyKeyboardRemove } from 'telegraf/typings/core/types/typegram';
 @Update()
 @UseFilters(TelegrafExceptionFilter)
 export class BotUpdate {
   constructor(
+    @InjectBot(BOT_NAME) private bot: Telegraf<Context>,
     @Inject('winston') private readonly logger: Logger,
     private countersService: CountersService,
   ) {}
@@ -60,7 +69,42 @@ export class BotUpdate {
   @UseGuards(SellerGuard)
   @UseGuards(AuthGuard)
   @Command('seller_cabinet')
-  async sellersCabinet(@Ctx() ctx: Context) {
+  async sellersCabinet(@Ctx() ctx: Context & any) {
     await ctx.scene.enter(SCENES.SELLER_CABINET);
+  }
+
+  @Command('main_menu')
+  async onMainMenu(@Ctx() ctx: Context & any) {
+    await replyMainMenuMessage(ctx);
+  }
+
+  @Action(CALLBACK_NAMES.FIND_DESSERT_BY_CATEGORY)
+  async onFindByCategory(@Ctx() ctx: Context) {
+    await ctx.editMessageReplyMarkup(null);
+
+    await ctx.scene.enter(SCENES.FIND_ANNOUNCEMENT_SCENE, { type: 'category' });
+  }
+
+  @Action(CALLBACK_NAMES.FIND_DESSERT_BY_TITLE)
+  async onFindByTitle(@Ctx() ctx: Context & any) {
+    await ctx.editMessageReplyMarkup(null);
+
+    await ctx.scene.enter(SCENES.FIND_ANNOUNCEMENT_SCENE, { type: 'title' });
+  }
+
+  @Action(CALLBACK_NAMES.RECOMMENDATIONS)
+  async onRecommendations(@Ctx() ctx: Context & any) {
+    await ctx.editMessageReplyMarkup(null);
+
+    await ctx.scene.enter(SCENES.FIND_ANNOUNCEMENT_SCENE, {
+      type: 'recommendations',
+    });
+  }
+
+  @Action(CALLBACK_NAMES.EDIT_LOCATION)
+  async onEditLocation(@Ctx() ctx: Context & any) {
+    await ctx.editMessageReplyMarkup(null);
+
+    await ctx.scene.enter(SCENES.EDIT_LOCATION_SCENE);
   }
 }

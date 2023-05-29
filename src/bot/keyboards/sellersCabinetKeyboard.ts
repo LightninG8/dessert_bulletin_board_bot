@@ -3,6 +3,7 @@ import { CALLBACK_NAMES, MESSAGES } from 'src/commonConstants';
 export const sellersCabinetKeyboard = {
   enter: () => ({
     reply_markup: {
+      keyboard: null,
       inline_keyboard: [
         [
           {

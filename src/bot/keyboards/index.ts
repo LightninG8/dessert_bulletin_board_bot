@@ -5,3 +5,5 @@ export * from './myAnnouncementsKeyboard';
 export * from './sellersCabinetKeyboard';
 export * from './mySellerProfileKeyboard';
 export * from './iAmConsumerKeyboard';
+export * from './mainMenuKeyboard';
+export * from './findAnnouncementsKeyboard';

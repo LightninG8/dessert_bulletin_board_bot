@@ -1,16 +1,37 @@
-import { Action, Ctx, Scene, SceneEnter } from 'nestjs-telegraf';
+import {
+  Action,
+  Command,
+  Ctx,
+  Hears,
+  InjectBot,
+  Scene,
+  SceneEnter,
+} from 'nestjs-telegraf';
 import { SceneContext } from 'telegraf/typings/scenes';
-import { CALLBACK_NAMES, SCENES, MESSAGES } from 'src/commonConstants';
-import { TelegrafExceptionFilter } from 'src/common';
+import {
+  CALLBACK_NAMES,
+  SCENES,
+  MESSAGES,
+  BOT_NAME,
+} from 'src/commonConstants';
+import { TelegrafExceptionFilter, replyMainMenuMessage } from 'src/common';
 import { UseFilters } from '@nestjs/common';
-import { sellersCabinetKeyboard } from 'src/bot/keyboards';
+import { mainMenuKeyboard, sellersCabinetKeyboard } from 'src/bot/keyboards';
+import { Context, Telegraf } from 'telegraf';
 
 @UseFilters(TelegrafExceptionFilter)
 @Scene(SCENES.SELLER_CABINET)
 export class SellersCabinetScene {
+  constructor(@InjectBot(BOT_NAME) private bot: Telegraf<Context>) {}
+
   @SceneEnter()
   async enter(@Ctx() ctx: SceneContext & any) {
-    await ctx.reply(MESSAGES.SELLER_CABINET, sellersCabinetKeyboard.enter());
+    const message = await ctx.reply(
+      MESSAGES.SELLER_CABINET,
+      sellersCabinetKeyboard.enter(),
+    );
+    ctx.scene.state.messageId = message.message_id;
+    ctx.scene.state.chatId = message.chat.id;
   }
 
   @Action(CALLBACK_NAMES.MY_ANNOUNCEMENTS)
@@ -45,6 +66,18 @@ export class SellersCabinetScene {
     });
 
     await ctx.reply(MESSAGES.EXIT_FROM_SELLER_CABINET);
+
+    await replyMainMenuMessage(ctx);
+
+    await ctx.scene.leave();
+  }
+
+  @Command('main_menu')
+  async onMainMenu(@Ctx() ctx: SceneContext & any) {
+    const { chatId, messageId } = ctx.scene.state;
+
+    this.bot.telegram.deleteMessage(chatId, messageId);
+    await replyMainMenuMessage(ctx);
 
     await ctx.scene.leave();
   }
