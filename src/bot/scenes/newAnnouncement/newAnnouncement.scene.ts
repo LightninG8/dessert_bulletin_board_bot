@@ -8,7 +8,11 @@ import {
   WizardStep,
 } from 'nestjs-telegraf';
 import { newAnnouncementKeyboard } from 'src/bot/keyboards';
-import { TelegrafExceptionFilter, getUserId } from 'src/common';
+import {
+  TelegrafExceptionFilter,
+  announcementFormatter,
+  getUserId,
+} from 'src/common';
 import { BOT_NAME, CATEGORIES, MESSAGES, SCENES } from 'src/commonConstants';
 import { AnnouncementsService, UsersService } from 'src/database';
 import { Scenes, Markup, Telegraf, Context } from 'telegraf';
@@ -31,8 +35,6 @@ export class NewAnnouncementScene {
     await this.usersService.getUserById(getUserId(ctx)).then((res) => {
       user = res;
     });
-
-    console.log(user);
 
     ctx.wizard.state.user = user;
 
@@ -111,22 +113,13 @@ export class NewAnnouncementScene {
     ctx.wizard.state.announcement.location = location;
     ctx.wizard.state.announcement.authorId = telegram_id;
 
-    const { title, description, photo, category, price } =
-      ctx.wizard.state.announcement;
+    const { photo } = ctx.wizard.state.announcement;
 
     await ctx.reply(MESSAGES.CHECK_THE_CORRECTNESS);
 
     await ctx.replyWithPhoto(photo, {
       ...newAnnouncementKeyboard.step6(),
-      caption: `
-${title}
-
-Описание: ${description}
-
-Категория: ${category}
-
-Стоимость: ${price} рублей
-      `,
+      caption: announcementFormatter(ctx.wizard.state.announcement),
     });
 
     await ctx.wizard.next();

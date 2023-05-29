@@ -1,1 +1,1 @@
-export const ANNOUNCEMENTS_LIMIT = 4;
+export const ANNOUNCEMENTS_LIMIT = 20;

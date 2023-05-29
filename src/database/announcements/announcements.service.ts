@@ -38,9 +38,31 @@ export class AnnouncementsService {
     return createdAnnouncement.save();
   }
 
+  async deleteAnnouncement(id: number): Promise<void> {
+    let announcement = null;
+
+    await this.announcementModel.collection
+      .findOne({
+        id: id,
+      })
+      .then((res) => {
+        announcement = res;
+      });
+
+    await this.announcementModel.collection.deleteOne({
+      id,
+    });
+
+    await this.usersService.removeAnnouncementFromUser(
+      announcement.authorId,
+      id,
+    );
+  }
+
   async getAnnouncementById(announcementId: number) {
     let result = null;
-    return await this.announcementModel.collection
+
+    await this.announcementModel.collection
       .findOne({
         id: announcementId,
       })
@@ -59,5 +81,14 @@ export class AnnouncementsService {
       .toArray();
 
     return docs;
+  }
+
+  async changeAnnouncement(announcementId: number, obj: object) {
+    await this.announcementModel.collection.updateOne(
+      { id: announcementId },
+      {
+        $set: obj,
+      },
+    );
   }
 }

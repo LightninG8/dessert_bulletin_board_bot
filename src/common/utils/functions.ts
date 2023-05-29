@@ -4,3 +4,5 @@ export const chunkArray = (arr, cnt) =>
       !(i % cnt) ? prev.concat([a.slice(i, i + cnt)]) : prev,
     [],
   );
+
+export const getIdFromCbQuery = (cbQuery: string) => +cbQuery.split(':').pop();

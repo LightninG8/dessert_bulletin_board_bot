@@ -36,6 +36,9 @@ export class Announcement {
   @Prop({ required: true })
   createdAt: number;
 
+  @Prop({ required: true })
+  category: string;
+
   _id: mongoose.Types.ObjectId | string;
 }
 

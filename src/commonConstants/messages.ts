@@ -8,6 +8,12 @@ export const MESSAGES = {
   NEED_REGISTRATION:
     'Для начала нужно зарегистрироваться как продавец. Введите команду /start чтобы зарегистрироваться',
   ANNOUNCEMENTS_LIMIT_REACHED: 'Вы достигли лимита объявлений',
+  NO_ANNOUNCEMENTS: 'Вы ещё не добавили ни одного объявления',
+  TRY_TO_DELETE_ANNOUNCEMENT:
+    'Вы точно хотите удалить это объявление? После удаления восстановить его будет невозможно',
+  ANNOUNCEMENT_DELETED: 'Объявление удалено',
+  EXIT_FROM_SELLERS_PROFILE: 'Вы вышли из профиля продавца',
+  CHANGES_SAVED: 'Изменения сохранены',
 
   REGISTRATION_1: 'Укажите ваш город (или отправьте геометку)',
   REGISTRATION_2: 'Отправьте фотографию',
@@ -22,6 +28,10 @@ export const MESSAGES = {
   TAKE_FROM_PROFILE: 'Взять из профиля',
   EDIT: 'Редактировать',
   EDIT_AGAIN: 'Заполнить заново',
+  DELETE: 'Удалить',
+  BACK: '<<< Назад',
+  CANCEL: 'Отмена',
+  EXIT: 'Выйти',
 
   CONFIRM: 'Да, всё верно',
   ADD_ANNOUNCEMENT: 'Добавить объявление',
@@ -33,6 +43,12 @@ export const MESSAGES = {
   INPUT_PRICE: 'Укажите стоимость',
   CHECK_THE_CORRECTNESS: 'Проверь, всё ли верно?',
   ANNOUNCEMENT_ADDED: 'Объявление добавлено',
+
+  NAME: 'Название',
+  DESCRIPTION: 'Описание',
+  PHOTO: 'Фото',
+  CATEGORIY: 'Категория',
+  PRICE: 'Стоимость',
 
   MY_ANNOUNCEMENTS: 'Ваши объявления',
 };

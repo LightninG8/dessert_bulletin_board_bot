@@ -63,6 +63,13 @@ export class UsersService {
     );
   }
 
+  async removeAnnouncementFromUser(userId: number, announcementId: number) {
+    return this.usersModel.collection.updateOne(
+      { telegram_id: userId },
+      { $pull: { announcements: announcementId } },
+    );
+  }
+
   async getUserAnnouncements(userId: number) {
     let announcementsList = null;
 
@@ -75,7 +82,6 @@ export class UsersService {
     await this.announcementsService
       .getManyAnnouncementsById(announcementsList)
       .then((res) => {
-        console.log(res);
         result = res;
       });
 

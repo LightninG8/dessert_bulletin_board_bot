@@ -32,7 +32,6 @@ export class StartScene {
   async onIAmConsumer(
     @Ctx() ctx: Context & { update: Update.CallbackQueryUpdate },
   ) {
-    // await ctx.scene.leave();
     await ctx.scene.enter(SCENES.I_AM_CONSUMER_SCENE);
   }
 
