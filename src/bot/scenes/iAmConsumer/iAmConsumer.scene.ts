@@ -6,7 +6,7 @@ import {
   SceneLeave,
 } from 'nestjs-telegraf';
 import { iAmConsumerKeyboards, mainMenuKeyboard } from 'src/bot/keyboards';
-import { getUserId, replyMainMenuMessage } from 'src/common';
+import { getUserId, getUserName, replyMainMenuMessage } from 'src/common';
 import { MESSAGES, SCENES } from 'src/commonConstants';
 import { UsersService } from 'src/database';
 import { GeocoderService } from 'src/geocoder';
@@ -21,13 +21,12 @@ export class IAmConsumerScene {
   @SceneEnter()
   async onEnter(@Ctx() ctx: Scenes.SceneContext & any) {
     const user = await this.usersService.getUserById(getUserId(ctx));
-    const { first_name, last_name } = ctx.from;
 
     ctx.scene.state.inputType = 'location';
     ctx.scene.state.user = {
       telegram_id: getUserId(ctx),
       type: user?.type || 'consumer',
-      name: user?.name || `${first_name} ${last_name}`,
+      name: user?.name || getUserName(ctx),
     };
 
     ctx.reply(MESSAGES.REGISTRARION_CONSUMER, iAmConsumerKeyboards.enter());

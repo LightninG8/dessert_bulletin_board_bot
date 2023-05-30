@@ -17,6 +17,12 @@ export const getUserId = (ctx: Context): number => {
   return -1;
 };
 
+export const getUserName = (ctx: Context) => {
+  const { first_name, last_name } = ctx.from;
+
+  return `${first_name || ''} ${last_name || ''}`.trim();
+};
+
 export const getCallbackData = (
   ctx: Context & { update: Update.CallbackQueryUpdate },
 ): string => {

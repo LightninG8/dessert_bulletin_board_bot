@@ -3,6 +3,7 @@ import { SCENES, MESSAGES } from 'src/commonConstants';
 import {
   TelegrafExceptionFilter,
   getUserId,
+  getUserName,
   mySellerProfileFormatter,
 } from 'src/common';
 import { UseFilters } from '@nestjs/common';
@@ -103,9 +104,7 @@ export class IAmSellerScene {
   @On('text')
   @Hears(MESSAGES.TAKE_FROM_PROFILE)
   async takeNameFromProdile(@Ctx() ctx: Scenes.WizardContext & any) {
-    const { first_name, last_name } = ctx.update.message.from;
-
-    ctx.wizard.state.user.name = `${first_name} ${last_name}`;
+    ctx.wizard.state.user.name = getUserName(ctx);
 
     await ctx.reply(MESSAGES.REGISTRATION_4, Markup.removeKeyboard());
 

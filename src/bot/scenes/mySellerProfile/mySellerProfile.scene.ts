@@ -13,6 +13,7 @@ import {
   getCallbackData,
   getIdFromCbQuery,
   getUserId,
+  getUserName,
   mySellerProfileFormatter,
 } from 'src/common';
 import { UseFilters } from '@nestjs/common';
@@ -129,7 +130,7 @@ export class MySellerProfileScene {
         if (ctx.update.message.text == MESSAGES.TAKE_FROM_PROFILE) {
           const { first_name, last_name } = ctx.update.message.from;
 
-          userAnswer = `${first_name} ${last_name}`;
+          userAnswer = getUserName(ctx);
         } else {
           userAnswer = ctx.update.message.text;
         }
