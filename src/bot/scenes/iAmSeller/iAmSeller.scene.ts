@@ -105,7 +105,7 @@ export class IAmSellerScene {
   async takeNameFromProdile(@Ctx() ctx: Scenes.WizardContext & any) {
     const { first_name, last_name } = ctx.update.message.from;
 
-    ctx.wizard.state.user.name = first_name + ' ' + last_name;
+    ctx.wizard.state.user.name = `${first_name} ${last_name}`;
 
     await ctx.reply(MESSAGES.REGISTRATION_4, Markup.removeKeyboard());
 

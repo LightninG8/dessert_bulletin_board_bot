@@ -27,7 +27,7 @@ export class IAmConsumerScene {
     ctx.scene.state.user = {
       telegram_id: getUserId(ctx),
       type: user?.type || 'consumer',
-      name: user?.name || first_name + ' ' + last_name,
+      name: user?.name || `${first_name} ${last_name}`,
     };
 
     ctx.reply(MESSAGES.REGISTRARION_CONSUMER, iAmConsumerKeyboards.enter());
