@@ -1,25 +1,36 @@
 import {
   Action,
+  Command,
   Ctx,
+  InjectBot,
   On,
   Scene,
   SceneEnter,
   SceneLeave,
 } from 'nestjs-telegraf';
 import { SceneContext } from 'telegraf/typings/scenes';
-import { CALLBACK_NAMES, SCENES, MESSAGES } from 'src/commonConstants';
 import {
+  CALLBACK_NAMES,
+  SCENES,
+  MESSAGES,
+  BOT_NAME,
+} from 'src/commonConstants';
+import {
+  AuthGuard,
+  SellerGuard,
   TelegrafExceptionFilter,
   getCallbackData,
   getIdFromCbQuery,
   getUserId,
   getUserName,
   mySellerProfileFormatter,
+  replyMainMenuMessage,
 } from 'src/common';
-import { UseFilters } from '@nestjs/common';
+import { UseFilters, UseGuards } from '@nestjs/common';
 import { UsersService } from 'src/database';
 import { iAmSellerKeyboards, mySellerProfileKeyboard } from 'src/bot/keyboards';
 import { GeocoderService } from 'src/geocoder';
+import { Context, Telegraf } from 'telegraf';
 
 @UseFilters(TelegrafExceptionFilter)
 @Scene(SCENES.MY_SELLER_PROFILE)
@@ -27,6 +38,7 @@ export class MySellerProfileScene {
   constructor(
     private usersService: UsersService,
     private geocoderService: GeocoderService,
+    @InjectBot(BOT_NAME) private bot: Telegraf<Context>,
   ) {}
   @SceneEnter()
   async enter(@Ctx() ctx: SceneContext & any) {
@@ -128,8 +140,6 @@ export class MySellerProfileScene {
         break;
       case 'NAME':
         if (ctx.update.message.text == MESSAGES.TAKE_FROM_PROFILE) {
-          const { first_name, last_name } = ctx.update.message.from;
-
           userAnswer = getUserName(ctx);
         } else {
           userAnswer = ctx.update.message.text;
@@ -195,5 +205,26 @@ export class MySellerProfileScene {
     ctx.scene.state.isEditing = false;
     ctx.scene.state.editType = null;
     ctx.scene.state.editingId = null;
+  }
+
+  @Command('main_menu')
+  async onMainMenu(@Ctx() ctx: SceneContext & any) {
+    const { chatId, messageId } = ctx.scene.state;
+
+    await this.bot.telegram.deleteMessage(chatId, messageId);
+    await replyMainMenuMessage(ctx);
+
+    await ctx.scene.leave();
+  }
+
+  @UseGuards(SellerGuard)
+  @UseGuards(AuthGuard)
+  @Command('seller_cabinet')
+  async sellersCabinet(@Ctx() ctx: Context & any) {
+    const { chatId, messageId } = ctx.scene.state;
+
+    await this.bot.telegram.deleteMessage(chatId, messageId);
+
+    await ctx.scene.enter(SCENES.SELLER_CABINET);
   }
 }

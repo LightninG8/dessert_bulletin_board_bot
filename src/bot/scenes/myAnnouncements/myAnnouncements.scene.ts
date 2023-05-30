@@ -47,6 +47,8 @@ export class MyAnnouncementsScene {
     if (!ctx.scene.state.userAnnouncements.length) {
       await ctx.reply(MESSAGES.NO_ANNOUNCEMENTS);
 
+      await ctx.scene.enter(SCENES.SELLER_CABINET);
+
       return;
     }
     await ctx.reply(
