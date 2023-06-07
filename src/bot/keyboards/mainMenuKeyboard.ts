@@ -8,6 +8,8 @@ export const mainMenuKeyboard = {
           text: MESSAGES.FIND_DESSERT_BY_CATEGORY,
           callback_data: CALLBACK_NAMES.FIND_DESSERT_BY_CATEGORY,
         },
+      ],
+      [
         {
           text: MESSAGES.FIND_DESSERT_BY_TITLE,
           callback_data: CALLBACK_NAMES.FIND_DESSERT_BY_TITLE,
