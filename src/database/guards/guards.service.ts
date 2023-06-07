@@ -31,14 +31,18 @@ export class GuardsService {
       });
 
     if (!existingGuard) {
-      this.addGuard(guardName);
+      existingGuard = await this.addGuard(guardName);
     }
 
     return existingGuard;
   }
 
   async addValueToGuardArray(guardName: string, value: number): Promise<void> {
-    await this.touchGuard(guardName);
+    const guard = await this.touchGuard(guardName);
+
+    if (guard?.guardArray?.include(value)) {
+      return;
+    }
 
     await this.guardsModel.collection.updateOne(
       { guardName },
