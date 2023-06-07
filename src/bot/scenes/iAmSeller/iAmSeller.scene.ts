@@ -20,7 +20,7 @@ export class IAmSellerScene {
     private usersService: UsersService,
   ) {}
 
-  // Отправьте геолокацию
+  // Имя
   @WizardStep(1)
   step1(@Ctx() ctx: Scenes.WizardContext & any) {
     ctx.wizard.state.user = {};
@@ -28,16 +28,44 @@ export class IAmSellerScene {
     ctx.wizard.state.user.telegram_id = getUserId(ctx);
     ctx.wizard.state.user.type = 'seller';
 
-    ctx.reply(MESSAGES.REGISTRATION_1, iAmSellerKeyboards.step1());
+    ctx.reply(MESSAGES.REGISTRATION_3, iAmSellerKeyboards.step3());
 
     ctx.wizard.next();
   }
 
-  // Фото
+  // Город
   @WizardStep(2)
+  @On('text')
+  @Hears(MESSAGES.TAKE_FROM_PROFILE)
+  async takeNameFromProfile(@Ctx() ctx: Scenes.WizardContext & any) {
+    ctx.wizard.state.user.name = getUserName(ctx);
+
+    await ctx.reply(
+      MESSAGES.REGISTRATION_1(ctx.wizard.state.user.name),
+      iAmSellerKeyboards.step1(),
+    );
+
+    ctx.wizard.next();
+  }
+
+  @WizardStep(2)
+  @On('text')
+  async step2(@Ctx() ctx: Scenes.WizardContext & any) {
+    ctx.wizard.state.user.name = ctx.update.message.text;
+
+    await ctx.reply(
+      MESSAGES.REGISTRATION_1(ctx.wizard.state.user.name),
+      iAmSellerKeyboards.step1(),
+    );
+
+    ctx.wizard.next();
+  }
+
+  // О себе
+  @WizardStep(3)
   @On('location')
   // Shitcode. Хз какой интерфейс под сообщение с локацией
-  async step2Location(@Ctx() ctx: Scenes.WizardContext & any) {
+  async step3Location(@Ctx() ctx: Scenes.WizardContext & any) {
     // Обратное геодекодирование
     const location = await this.geocoderService
       .reverse(ctx.update.message.location)
@@ -53,117 +81,74 @@ export class IAmSellerScene {
       ctx.wizard.state.user.city = location.city;
       ctx.wizard.state.user.location = location;
 
-      await ctx.reply(MESSAGES.REGISTRATION_2, iAmSellerKeyboards.step2());
+      await ctx.reply(
+        MESSAGES.REGISTRATION_4(ctx.wizard.state.user.name),
+        Markup.removeKeyboard(),
+      );
 
       ctx.wizard.next();
     }
   }
 
-  // Фото
-  @WizardStep(2)
+  @WizardStep(3)
   @On('text')
   // Shitcode. Хз какой интерфейс под сообщение с локацией
-  async step2Text(@Ctx() ctx: Scenes.WizardContext & any) {
+  async step3Text(@Ctx() ctx: Scenes.WizardContext & any) {
     const text = String(ctx.update.message.text).toLowerCase();
 
     ctx.wizard.state.user.city = text.charAt(0).toUpperCase() + text.slice(1);
     ctx.wizard.state.user.location = null;
 
-    await ctx.reply(MESSAGES.REGISTRATION_2, iAmSellerKeyboards.step2());
-
-    ctx.wizard.next();
-  }
-
-  // Имя
-  @WizardStep(3)
-  @On('photo')
-  async step3(@Ctx() ctx: Scenes.WizardContext & any) {
-    ctx.wizard.state.user.photo =
-      ctx.update.message.photo.pop().file_id || null;
-
-    await ctx.reply(MESSAGES.REGISTRATION_3, iAmSellerKeyboards.step3());
-
-    ctx.wizard.next();
-  }
-
-  @WizardStep(3)
-  @Hears(MESSAGES.TAKE_FROM_PROFILE)
-  async takePhotoFromProfile(@Ctx() ctx: Scenes.WizardContext & any) {
-    const user = await ctx.telegram.getUserProfilePhotos(ctx.from.id, 0);
-    const photo = user.photos[0][0]?.file_id;
-
-    ctx.wizard.state.user.photo = photo || null;
-
-    await ctx.reply(MESSAGES.REGISTRATION_3, iAmSellerKeyboards.step3());
-
-    ctx.wizard.next();
-  }
-
-  // Описание
-  @WizardStep(4)
-  @On('text')
-  @Hears(MESSAGES.TAKE_FROM_PROFILE)
-  async takeNameFromProdile(@Ctx() ctx: Scenes.WizardContext & any) {
-    ctx.wizard.state.user.name = getUserName(ctx);
-
-    await ctx.reply(MESSAGES.REGISTRATION_4, Markup.removeKeyboard());
-
-    ctx.wizard.next();
-  }
-
-  @WizardStep(4)
-  @On('text')
-  async step4(@Ctx() ctx: Scenes.WizardContext & any) {
-    ctx.wizard.state.user.name = ctx.update.message.text;
-
-    await ctx.reply(MESSAGES.REGISTRATION_4, Markup.removeKeyboard());
+    await ctx.reply(
+      MESSAGES.REGISTRATION_4(ctx.wizard.state.user.name),
+      Markup.removeKeyboard(),
+    );
 
     ctx.wizard.next();
   }
 
   // Контакты
-  @WizardStep(5)
+  @WizardStep(4)
   @On('text')
-  async step5(@Ctx() ctx: Scenes.WizardContext & any) {
+  async step4(@Ctx() ctx: Scenes.WizardContext & any) {
     ctx.wizard.state.user.about = ctx.update.message.text;
 
-    await ctx.reply(MESSAGES.REGISTRATION_5, Markup.removeKeyboard());
+    await ctx.reply(
+      MESSAGES.REGISTRATION_5(ctx.wizard.state.user.name),
+      Markup.removeKeyboard(),
+    );
 
     ctx.wizard.next();
   }
 
   // Подтверждение
-  @WizardStep(6)
+  @WizardStep(5)
   @On('text')
-  async step6(@Ctx() ctx: Scenes.WizardContext & any) {
+  async step5(@Ctx() ctx: Scenes.WizardContext & any) {
     ctx.wizard.state.user.contacts = ctx.update.message.text;
 
-    const { photo } = ctx.wizard.state.user;
-
     await ctx.reply(MESSAGES.REGISTRATION_6);
-    await ctx.replyWithPhoto(photo, {
-      ...iAmSellerKeyboards.step6(),
-      caption: mySellerProfileFormatter(ctx.wizard.state.user),
-    });
+    await ctx.reply(
+      mySellerProfileFormatter(ctx.wizard.state.user),
+      iAmSellerKeyboards.step6(),
+    );
 
     ctx.wizard.next();
   }
 
   // Регистрация закончена
-  @WizardStep(7)
+  @WizardStep(6)
   @Hears(MESSAGES.CONFIRM)
-  async step7(@Ctx() ctx: Scenes.WizardContext & any) {
-    await ctx.reply(MESSAGES.REGISTRATION_7, Markup.removeKeyboard());
+  async step6(@Ctx() ctx: Scenes.WizardContext & any) {
+    // await ctx.reply(MESSAGES.REGISTRATION_7, Markup.removeKeyboard());
 
     this.usersService.registration(ctx.wizard.state.user);
 
-    await ctx.reply(MESSAGES.REGISTRATION_8, iAmSellerKeyboards.step7());
-
-    await ctx.scene.leave();
+    await ctx.scene.enter(SCENES.NEW_ANNOUNCEMENT);
   }
 
   // Заполнить снова
-  @WizardStep(7)
+  @WizardStep(6)
   @Hears(MESSAGES.EDIT_AGAIN)
   async editAgain(@Ctx() ctx: Scenes.WizardContext) {
     await ctx.scene.reenter();

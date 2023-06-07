@@ -11,11 +11,22 @@ import {
   FindAnnouncementScene,
 } from './scenes';
 import { GeocoderModule } from 'src/geocoder';
-import { AnnouncementsModule, CountersModule, UsersModule } from 'src/database';
+import {
+  AnnouncementsModule,
+  CountersModule,
+  GuardsModule,
+  UsersModule,
+} from 'src/database';
 import { NewAnnouncementScene } from './scenes/newAnnouncement';
 
 @Module({
-  imports: [GeocoderModule, UsersModule, AnnouncementsModule, CountersModule],
+  imports: [
+    GeocoderModule,
+    UsersModule,
+    AnnouncementsModule,
+    CountersModule,
+    GuardsModule,
+  ],
   providers: [
     BotUpdate,
     StartScene,

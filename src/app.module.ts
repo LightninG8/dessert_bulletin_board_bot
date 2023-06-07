@@ -23,6 +23,7 @@ import { Context, Telegraf } from 'telegraf';
 import { Connection } from 'mongoose';
 import * as mediaGroup from 'telegraf-media-group';
 import { CountersModule } from './database';
+import { GetcourseModule } from './getcourse/getcourse.module';
 
 // const sessions = new LocalSession({ database: 'session_db.json' });
 
@@ -33,6 +34,10 @@ import { CountersModule } from './database';
       useClass: MongooseConfigService,
     }),
 
+    ConfigModule.forRoot({
+      envFilePath: `.${process.env.NODE_ENV}.env`,
+      isGlobal: true,
+    }),
     ConfigModule.forRoot(),
     TelegrafModule.forRootAsync({
       botName: BOT_NAME,
@@ -67,6 +72,7 @@ import { CountersModule } from './database';
     BotModule,
     GeocoderModule,
     CountersModule,
+    GetcourseModule,
   ],
   controllers: [],
   providers: [],

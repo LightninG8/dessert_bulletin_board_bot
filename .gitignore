@@ -3,7 +3,8 @@
 /node_modules
 
 # Env
-.env
+.development.env
+.production.env
 
 # Logs
 logs

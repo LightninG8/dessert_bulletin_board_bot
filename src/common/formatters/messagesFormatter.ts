@@ -12,7 +12,7 @@ export const announcementFormatter = ({
     : city;
 
   return `
-${title}
+Название: ${title}
 
 Описание: ${description}
 
@@ -20,9 +20,9 @@ ${title}
 
 Стоимость: ${price} рублей
 
-Адрес: ${address}
+Адрес, где можно забрать десерт: ${address}
 
-Контакты: ${contacts}
+Контакты для связи: ${contacts}
 `;
 };
 

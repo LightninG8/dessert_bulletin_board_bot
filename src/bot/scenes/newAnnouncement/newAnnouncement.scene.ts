@@ -38,6 +38,11 @@ export class NewAnnouncementScene {
 
     ctx.wizard.state.user = user;
 
+    await ctx.reply(
+      MESSAGES.NEW_ANNOUNCEMENT_DESCRIPTION(ctx.wizard.state.user.name),
+      Markup.removeKeyboard(),
+    );
+
     await ctx.reply(MESSAGES.INPUT_TITLE, Markup.removeKeyboard());
 
     await ctx.wizard.next();
@@ -54,23 +59,10 @@ export class NewAnnouncementScene {
     await ctx.wizard.next();
   }
 
-  // Отправьте фото
+  // Выберите категорию
   @WizardStep(3)
-  @On('text')
   async step3(@Ctx() ctx: Scenes.WizardContext & any) {
     ctx.wizard.state.announcement.description = ctx.update.message.text;
-
-    await ctx.reply(MESSAGES.INPUT_PHOTOS, Markup.removeKeyboard());
-
-    await ctx.wizard.next();
-  }
-
-  // Выберите категорию
-  @WizardStep(4)
-  @On('photo')
-  async step4(@Ctx() ctx: Scenes.WizardContext & any) {
-    ctx.wizard.state.announcement.photo =
-      ctx.update.message.photo.pop().file_id;
 
     await ctx.reply(MESSAGES.INPUT_CATEGORIES, newAnnouncementKeyboard.step4());
 
@@ -78,9 +70,9 @@ export class NewAnnouncementScene {
   }
 
   // Введите цену
-  @WizardStep(5)
+  @WizardStep(4)
   @On('text')
-  async step5(@Ctx() ctx: Scenes.WizardContext & any) {
+  async step4(@Ctx() ctx: Scenes.WizardContext & any) {
     const category = ctx.update.message.text.split(' ').slice(1).join(' ');
 
     if (!CATEGORIES.includes(category)) {
@@ -94,9 +86,10 @@ export class NewAnnouncementScene {
     await ctx.wizard.next();
   }
 
-  // Проверьте правильность
-  @WizardStep(6)
-  async step6(@Ctx() ctx: Scenes.WizardContext & any) {
+  // Отправьте фото
+  @WizardStep(5)
+  @On('text')
+  async step5(@Ctx() ctx: Scenes.WizardContext & any) {
     const inputPrice = Number(ctx.update.message.text);
 
     if (!inputPrice) {
@@ -105,9 +98,22 @@ export class NewAnnouncementScene {
       return;
     }
 
+    ctx.wizard.state.announcement.price = inputPrice;
+
+    await ctx.reply(MESSAGES.INPUT_PHOTOS, Markup.removeKeyboard());
+
+    await ctx.wizard.next();
+  }
+
+  // Проверьте правильность
+  @WizardStep(6)
+  @On('photo')
+  async step6(@Ctx() ctx: Scenes.WizardContext & any) {
+    ctx.wizard.state.announcement.photo =
+      ctx.update.message.photo.pop().file_id;
+
     const { contacts, city, location, telegram_id } = ctx.wizard.state.user;
 
-    ctx.wizard.state.announcement.price = inputPrice;
     ctx.wizard.state.announcement.contacts = contacts;
     ctx.wizard.state.announcement.city = city;
     ctx.wizard.state.announcement.location = location;
@@ -138,7 +144,10 @@ export class NewAnnouncementScene {
   async confirm(@Ctx() ctx: Scenes.WizardContext & any) {
     this.announcementsService.addAnnouncement(ctx.wizard.state.announcement);
 
-    await ctx.reply(MESSAGES.ANNOUNCEMENT_ADDED, Markup.removeKeyboard());
+    await ctx.reply(
+      MESSAGES.ANNOUNCEMENT_ADDED(ctx.wizard.state.user.name),
+      Markup.removeKeyboard(),
+    );
 
     await ctx.scene.enter(SCENES.SELLER_CABINET);
   }
