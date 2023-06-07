@@ -40,7 +40,7 @@ export class GuardsService {
   async addValueToGuardArray(guardName: string, value: number): Promise<void> {
     const guard = await this.touchGuard(guardName);
 
-    if (guard?.guardArray?.include(value)) {
+    if (guard?.guardArray?.includes(value)) {
       return;
     }
 
