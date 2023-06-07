@@ -18,8 +18,6 @@ export class SellerGuard implements CanActivate {
 
     const isAdmin = ADMIN_IDS.includes(from.id);
 
-    console.log(ADMIN_IDS);
-
     if (!isAdmin) {
       throw new TelegrafException(MESSAGES.REGISTRATION_PROHIBITED);
     }
