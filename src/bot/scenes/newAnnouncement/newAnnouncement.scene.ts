@@ -1,5 +1,6 @@
 import { UseFilters } from '@nestjs/common';
 import {
+  Command,
   Context as Ctx,
   Hears,
   InjectBot,
@@ -25,6 +26,13 @@ export class NewAnnouncementScene {
     private announcementsService: AnnouncementsService,
   ) {}
 
+  @Command('start')
+  @Command('main_menu')
+  @Command('seller_cabinet')
+  onMainMenu(@Ctx() ctx: Scenes.WizardContext & any) {
+    ctx.reply('Завершите добавление объявления');
+  }
+
   // Введите название
   @WizardStep(1)
   async step1(@Ctx() ctx: Scenes.WizardContext & any) {
@@ -39,7 +47,9 @@ export class NewAnnouncementScene {
     ctx.wizard.state.user = user;
 
     await ctx.reply(
-      MESSAGES.NEW_ANNOUNCEMENT_DESCRIPTION(ctx.wizard.state.user.name),
+      MESSAGES.NEW_ANNOUNCEMENT_DESCRIPTION(
+        ctx.wizard.state.user?.name || 'Кондитер',
+      ),
       Markup.removeKeyboard(),
     );
 

@@ -34,12 +34,6 @@ export class BotUpdate {
     await ctx.scene.enter(SCENES.START_SCENE);
   }
 
-  @Command('admin')
-  @UseGuards(SellerGuard)
-  async onAdmin(ctx: Context) {
-    await ctx.reply('Сообщение для админов');
-  }
-
   @UseGuards(AnnouncementsLimitGuard)
   @UseGuards(SellerGuard)
   @Action(CALLBACK_NAMES.NEW_ANNOUNCEMENT)
@@ -73,6 +67,7 @@ export class BotUpdate {
     await ctx.scene.enter(SCENES.SELLER_CABINET);
   }
 
+  @UseGuards(AuthGuard)
   @Command('main_menu')
   async onMainMenu(@Ctx() ctx: Context & any) {
     await replyMainMenuMessage(ctx);

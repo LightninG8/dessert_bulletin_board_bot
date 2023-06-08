@@ -12,8 +12,6 @@ export class TelegrafExceptionFilter implements ExceptionFilter {
 
     const id = ctx.from.id;
 
-    ctx.answerCbQuery();
-
     if (exception.message == MESSAGES.REGISTRATION_PROHIBITED) {
       await ctx.reply(
         MESSAGES.REGISTRATION_PROHIBITED,

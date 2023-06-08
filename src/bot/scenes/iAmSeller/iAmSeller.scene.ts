@@ -1,4 +1,11 @@
-import { Context as Ctx, Hears, On, Wizard, WizardStep } from 'nestjs-telegraf';
+import {
+  Command,
+  Context as Ctx,
+  Hears,
+  On,
+  Wizard,
+  WizardStep,
+} from 'nestjs-telegraf';
 import { SCENES, MESSAGES } from 'src/commonConstants';
 import {
   TelegrafExceptionFilter,
@@ -20,6 +27,13 @@ export class IAmSellerScene {
     private usersService: UsersService,
   ) {}
 
+  @Command('start')
+  @Command('main_menu')
+  @Command('seller_cabinet')
+  onMainMenu(@Ctx() ctx: Scenes.WizardContext & any) {
+    ctx.reply('Сначала завершите регистрацию');
+  }
+
   // Имя
   @WizardStep(1)
   step1(@Ctx() ctx: Scenes.WizardContext & any) {
@@ -35,7 +49,6 @@ export class IAmSellerScene {
 
   // Город
   @WizardStep(2)
-  @On('text')
   @Hears(MESSAGES.TAKE_FROM_PROFILE)
   async takeNameFromProfile(@Ctx() ctx: Scenes.WizardContext & any) {
     ctx.wizard.state.user.name = getUserName(ctx);
@@ -142,7 +155,7 @@ export class IAmSellerScene {
   async step6(@Ctx() ctx: Scenes.WizardContext & any) {
     // await ctx.reply(MESSAGES.REGISTRATION_7, Markup.removeKeyboard());
 
-    this.usersService.registration(ctx.wizard.state.user);
+    await this.usersService.registration(ctx.wizard.state.user);
 
     await ctx.scene.enter(SCENES.NEW_ANNOUNCEMENT);
   }
