@@ -39,6 +39,8 @@ export class BotUpdate {
   @UseGuards(SellerGuard)
   @Action(CALLBACK_NAMES.NEW_ANNOUNCEMENT)
   async newAnnouncementAction(@Ctx() ctx: Scenes.WizardContext & any) {
+    await ctx.answerCbQuery();
+
     await ctx.editMessageReplyMarkup({
       reply_markup: { remove_keyboard: true },
     });
@@ -76,7 +78,8 @@ export class BotUpdate {
 
   @Action(CALLBACK_NAMES.FIND_DESSERT)
   async onRecommendations(@Ctx() ctx: Context & any) {
-    await ctx.editMessageReplyMarkup(null);
+    await ctx.answerCbQuery();
+    await ctx.deleteMessage();
 
     await ctx.scene.enter(SCENES.FIND_ANNOUNCEMENT_SCENE, {
       type: 'all',
@@ -85,14 +88,16 @@ export class BotUpdate {
 
   @Action(CALLBACK_NAMES.EDIT_LOCATION)
   async onEditLocation(@Ctx() ctx: Context & any) {
-    await ctx.editMessageReplyMarkup(null);
+    await ctx.answerCbQuery();
+    await ctx.deleteMessage();
 
     await ctx.scene.enter(SCENES.EDIT_LOCATION_SCENE);
   }
 
   @Action(CALLBACK_NAMES.FAVORITED_ANNOUNCEMENTS)
   async onFavouritedAnnouncements(@Ctx() ctx: Context & any) {
-    await ctx.editMessageReplyMarkup(null);
+    await ctx.answerCbQuery();
+    await ctx.deleteMessage();
 
     await ctx.scene.enter(SCENES.FIND_ANNOUNCEMENT_SCENE, {
       type: 'favourited',

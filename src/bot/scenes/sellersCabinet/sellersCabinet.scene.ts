@@ -64,12 +64,21 @@ export class SellersCabinetScene {
     await ctx.editMessageReplyMarkup({
       reply_markup: { remove_keyboard: true },
     });
-
-    await ctx.reply(MESSAGES.EXIT_FROM_SELLER_CABINET);
+    await ctx.deleteMessage();
 
     await replyMainMenuMessage(ctx);
 
     await ctx.scene.leave();
+  }
+
+  @Action(CALLBACK_NAMES.EDIT_USER_CITY)
+  async onUserEditCity(@Ctx() ctx: SceneContext & any) {
+    await ctx.answerCbQuery();
+    await ctx.editMessageReplyMarkup({
+      reply_markup: { remove_keyboard: true },
+    });
+
+    await ctx.scene.enter(SCENES.EDIT_LOCATION_SCENE);
   }
 
   @Command('main_menu')

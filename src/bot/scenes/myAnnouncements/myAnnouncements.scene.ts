@@ -59,7 +59,7 @@ export class MyAnnouncementsScene {
 
   @Action(new RegExp(`${CALLBACK_NAMES.GET_ANNOUNCEMENT}:[0-9]+`))
   async onAction(@Ctx() ctx: Context & { update: Update.CallbackQueryUpdate }) {
-    ctx.answerCbQuery();
+    await ctx.answerCbQuery();
 
     const id = getIdFromCbQuery(getCallbackData(ctx));
 
@@ -82,7 +82,7 @@ export class MyAnnouncementsScene {
   async editAnnouncement(
     @Ctx() ctx: Context & { update: Update.CallbackQueryUpdate },
   ) {
-    ctx.answerCbQuery();
+    await ctx.answerCbQuery();
 
     const id = getIdFromCbQuery(getCallbackData(ctx));
 
@@ -97,7 +97,7 @@ export class MyAnnouncementsScene {
 
   @Action(CALLBACK_NAMES.BACK_TO_ENTER)
   async backToEnter(@Ctx() ctx: SceneContext & any) {
-    ctx.answerCbQuery();
+    await ctx.answerCbQuery();
     await ctx.deleteMessage();
 
     await ctx.reply(
@@ -110,7 +110,7 @@ export class MyAnnouncementsScene {
   async backToAnnouncement(
     @Ctx() ctx: Context & { update: Update.CallbackQueryUpdate },
   ) {
-    ctx.answerCbQuery();
+    await ctx.answerCbQuery();
 
     const id = getIdFromCbQuery(getCallbackData(ctx));
 
@@ -133,7 +133,7 @@ export class MyAnnouncementsScene {
   async tryToDeleteAnnouncement(
     @Ctx() ctx: Context & { update: Update.CallbackQueryUpdate },
   ) {
-    ctx.answerCbQuery();
+    await ctx.answerCbQuery();
 
     const id = getIdFromCbQuery(getCallbackData(ctx));
 
@@ -153,7 +153,7 @@ export class MyAnnouncementsScene {
   async deleteAnnouncement(
     @Ctx() ctx: Context & { update: Update.CallbackQueryUpdate },
   ) {
-    ctx.answerCbQuery();
+    await ctx.answerCbQuery();
 
     const id = getIdFromCbQuery(getCallbackData(ctx));
 
@@ -166,7 +166,7 @@ export class MyAnnouncementsScene {
 
   @Action(CALLBACK_NAMES.BACK)
   async back(@Ctx() ctx: Context & { update: Update.CallbackQueryUpdate }) {
-    ctx.answerCbQuery();
+    await ctx.answerCbQuery();
 
     await ctx.deleteMessage();
 
@@ -177,7 +177,8 @@ export class MyAnnouncementsScene {
   async editAnnouncementTitle(
     @Ctx() ctx: Context & { update: Update.CallbackQueryUpdate },
   ) {
-    ctx.answerCbQuery();
+    await ctx.answerCbQuery();
+
     await ctx.editMessageReplyMarkup({
       reply_markup: { remove_keyboard: true },
     });

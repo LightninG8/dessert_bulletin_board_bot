@@ -32,7 +32,7 @@ export class StartScene {
   async onIAmConsumer(
     @Ctx() ctx: Context & { update: Update.CallbackQueryUpdate },
   ) {
-    ctx.answerCbQuery();
+    await ctx.answerCbQuery();
 
     await ctx.deleteMessage();
 
@@ -45,7 +45,7 @@ export class StartScene {
     @Ctx()
     ctx: Scenes.SceneContext & { update: Update.CallbackQueryUpdate } & any,
   ) {
-    ctx.answerCbQuery();
+    await ctx.answerCbQuery();
 
     await ctx.editMessageReplyMarkup(null);
 

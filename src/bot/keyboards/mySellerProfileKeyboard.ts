@@ -46,12 +46,6 @@ export const mySellerProfileKeyboard = {
         ],
         [
           {
-            text: MESSAGES.CITY,
-            callback_data: CALLBACK_NAMES.EDIT_USER_CITY,
-          },
-        ],
-        [
-          {
             text: MESSAGES.BACK,
             callback_data: CALLBACK_NAMES.BACK_TO_MY_SELLER_PROFILE,
           },

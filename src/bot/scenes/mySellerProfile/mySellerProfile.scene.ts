@@ -63,7 +63,7 @@ export class MySellerProfileScene {
 
   @Action(CALLBACK_NAMES.BACK_TO_SELLER_CABINET)
   async onBackToSellerCabinet(@Ctx() ctx: SceneContext & any) {
-    ctx.answerCbQuery();
+    await ctx.answerCbQuery();
 
     await ctx.deleteMessage();
 
@@ -72,7 +72,7 @@ export class MySellerProfileScene {
 
   @Action(CALLBACK_NAMES.BACK_TO_MY_SELLER_PROFILE)
   async onBackToMySellerProfile(@Ctx() ctx: SceneContext & any) {
-    ctx.answerCbQuery();
+    await ctx.answerCbQuery();
 
     await ctx.editMessageReplyMarkup(
       mySellerProfileKeyboard.enter(ctx.scene.state.user).reply_markup,
@@ -81,7 +81,7 @@ export class MySellerProfileScene {
 
   @Action(CALLBACK_NAMES.EDIT_USER)
   async onEditUser(@Ctx() ctx: SceneContext & any) {
-    ctx.answerCbQuery();
+    await ctx.answerCbQuery();
 
     await ctx.editMessageReplyMarkup(
       mySellerProfileKeyboard.edit(ctx.scene.state.user).reply_markup,
@@ -90,7 +90,8 @@ export class MySellerProfileScene {
 
   @Action(new RegExp(`EDIT_USER_[A-Z]+`))
   async editUser(@Ctx() ctx: SceneContext & any) {
-    ctx.answerCbQuery();
+    await ctx.answerCbQuery();
+
     await ctx.editMessageReplyMarkup({
       reply_markup: { remove_keyboard: true },
     });

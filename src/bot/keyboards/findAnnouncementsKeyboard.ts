@@ -34,6 +34,12 @@ export const findAnnouncementsKeyboard = {
             callback_data: CALLBACK_NAMES.EXIT,
           },
         ],
+        [
+          {
+            text: MESSAGES.COMPLAIN,
+            callback_data: CALLBACK_NAMES.COMPLAIN_ANNOUNCEMENT,
+          },
+        ],
       ],
     },
   }),
@@ -69,6 +75,45 @@ export const findAnnouncementsKeyboard = {
           {
             text: MESSAGES.EXIT,
             callback_data: CALLBACK_NAMES.EXIT,
+          },
+        ],
+        [
+          {
+            text: MESSAGES.COMPLAIN,
+            callback_data: CALLBACK_NAMES.COMPLAIN_ANNOUNCEMENT,
+          },
+        ],
+      ],
+    },
+  }),
+
+  complain: () => ({
+    reply_markup: {
+      inline_keyboard: [
+        [
+          {
+            text: 'Мошеничество',
+            callback_data: `${CALLBACK_NAMES.COMPLAIN}:0`,
+          },
+          {
+            text: 'Контакты недоступны',
+            callback_data: `${CALLBACK_NAMES.COMPLAIN}:1`,
+          },
+        ],
+        [
+          {
+            text: 'Чужие работы/фото',
+            callback_data: `${CALLBACK_NAMES.COMPLAIN}:2`,
+          },
+          {
+            text: 'Другое',
+            callback_data: `${CALLBACK_NAMES.COMPLAIN}:3`,
+          },
+        ],
+        [
+          {
+            text: MESSAGES.BACK,
+            callback_data: CALLBACK_NAMES.BACK_FROM_COMPLAIN,
           },
         ],
       ],
