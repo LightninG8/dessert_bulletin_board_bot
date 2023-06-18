@@ -25,6 +25,9 @@ export class Announcement {
   city: string;
 
   @Prop({ required: true })
+  about: string;
+
+  @Prop({ required: true })
   contacts: string;
 
   @Prop({ type: UserLocation })
@@ -35,9 +38,6 @@ export class Announcement {
 
   @Prop({ required: true })
   createdAt: number;
-
-  @Prop({ required: true })
-  category: string;
 
   _id: mongoose.Types.ObjectId | string;
 }

@@ -71,7 +71,10 @@ export class MyAnnouncementsScene {
 
     await ctx.replyWithPhoto(announcement.photo, {
       ...myAnnouncementsKeyboards.announcement(announcement),
-      caption: announcementFormatter(announcement),
+      caption: announcementFormatter(announcement, {
+        showContacts: false,
+        showInfo: false,
+      }),
     });
   }
 
@@ -119,7 +122,10 @@ export class MyAnnouncementsScene {
 
     await ctx.replyWithPhoto(announcement.photo, {
       ...myAnnouncementsKeyboards.announcement(announcement),
-      caption: announcementFormatter(announcement),
+      caption: announcementFormatter(announcement, {
+        showContacts: false,
+        showInfo: false,
+      }),
     });
   }
 
@@ -243,7 +249,10 @@ export class MyAnnouncementsScene {
 
     await ctx.replyWithPhoto(announcement.photo, {
       ...myAnnouncementsKeyboards.announcement(announcement),
-      caption: announcementFormatter(announcement),
+      caption: announcementFormatter(announcement, {
+        showContacts: false,
+        showInfo: false,
+      }),
     });
   }
 

@@ -69,27 +69,10 @@ export class NewAnnouncementScene {
     await ctx.wizard.next();
   }
 
-  // Выберите категорию
+  // Введите цену
   @WizardStep(3)
   async step3(@Ctx() ctx: Scenes.WizardContext & any) {
     ctx.wizard.state.announcement.description = ctx.update.message.text;
-
-    await ctx.reply(MESSAGES.INPUT_CATEGORIES, newAnnouncementKeyboard.step4());
-
-    await ctx.wizard.next();
-  }
-
-  // Введите цену
-  @WizardStep(4)
-  @On('text')
-  async step4(@Ctx() ctx: Scenes.WizardContext & any) {
-    const category = ctx.update.message.text.split(' ').slice(1).join(' ');
-
-    if (!CATEGORIES.includes(category)) {
-      return;
-    }
-
-    ctx.wizard.state.announcement.category = category;
 
     await ctx.reply(MESSAGES.INPUT_PRICE, Markup.removeKeyboard());
 
@@ -97,7 +80,7 @@ export class NewAnnouncementScene {
   }
 
   // Отправьте фото
-  @WizardStep(5)
+  @WizardStep(4)
   @On('text')
   async step5(@Ctx() ctx: Scenes.WizardContext & any) {
     const inputPrice = Number(ctx.update.message.text);
@@ -116,15 +99,17 @@ export class NewAnnouncementScene {
   }
 
   // Проверьте правильность
-  @WizardStep(6)
+  @WizardStep(5)
   @On('photo')
   async step6(@Ctx() ctx: Scenes.WizardContext & any) {
     ctx.wizard.state.announcement.photo =
       ctx.update.message.photo.pop().file_id;
 
-    const { contacts, city, location, telegram_id } = ctx.wizard.state.user;
+    const { contacts, city, location, telegram_id, about } =
+      ctx.wizard.state.user;
 
     ctx.wizard.state.announcement.contacts = contacts;
+    ctx.wizard.state.announcement.about = about;
     ctx.wizard.state.announcement.city = city;
     ctx.wizard.state.announcement.location = location;
     ctx.wizard.state.announcement.authorId = telegram_id;
@@ -135,21 +120,24 @@ export class NewAnnouncementScene {
 
     await ctx.replyWithPhoto(photo, {
       ...newAnnouncementKeyboard.step6(),
-      caption: announcementFormatter(ctx.wizard.state.announcement),
+      caption: announcementFormatter(ctx.wizard.state.announcement, {
+        showContacts: false,
+        showInfo: false,
+      }),
     });
 
     await ctx.wizard.next();
   }
 
   // Заполнить заново
-  @WizardStep(7)
+  @WizardStep(6)
   @Hears(MESSAGES.EDIT_AGAIN)
   async editAgain(@Ctx() ctx: Scenes.WizardContext & any) {
     await ctx.scene.reenter();
   }
 
   // Объявление добавлено
-  @WizardStep(7)
+  @WizardStep(6)
   @Hears(MESSAGES.CONFIRM)
   async confirm(@Ctx() ctx: Scenes.WizardContext & any) {
     this.announcementsService.addAnnouncement(ctx.wizard.state.announcement);

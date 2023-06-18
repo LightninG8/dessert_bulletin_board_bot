@@ -1,12 +1,7 @@
-export const announcementFormatter = ({
-  title,
-  description,
-  price,
-  category,
-  city,
-  location,
-  contacts,
-}) => {
+export const announcementFormatter = (
+  { title, description, price, about, city, location, contacts },
+  { showInfo, showContacts },
+) => {
   const address = location
     ? `${location.city}, ${location.streetName} ${location.streetNumber}`
     : city;
@@ -16,24 +11,30 @@ export const announcementFormatter = ({
 
 Описание: ${description}
 
-Категория: ${category}
-
 Стоимость: ${price} рублей
 
 Адрес, где можно забрать десерт: ${address}
-
-Контакты для связи: ${contacts}
+${
+  showInfo
+    ? `
+О кондитере: ${about || ''}`
+    : ''
+}
+${
+  showContacts
+    ? `
+Контакты для связи: ${contacts}`
+    : ''
+}
 `;
 };
 
-export const mySellerProfileFormatter = ({ name, city, about, contacts }) => {
+export const mySellerProfileFormatter = ({ name, city, about }) => {
   return `
 Имя: ${name}
 
 Город: ${city}
 
 Описание: ${about}
-
-Контакты: ${contacts}
 `;
 };

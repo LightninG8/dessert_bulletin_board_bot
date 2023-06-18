@@ -71,6 +71,9 @@ export class User {
   @Prop({ required: true })
   announcements?: string[];
 
+  @Prop({ required: true })
+  favouritedAnnouncements?: string[];
+
   @Prop({ type: UserLocation })
   location?: UserLocation | null;
 

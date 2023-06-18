@@ -16,5 +16,19 @@ export const iAmConsumerKeyboards = {
     },
   }),
 
+  leave: () => ({
+    reply_markup: {
+      inline_keyboard: [
+        [
+          {
+            text: MESSAGES.FIND_DESSERT,
+            callback_data: CALLBACK_NAMES.FIND_DESSERT,
+          },
+        ],
+      ],
+      resize_keyboard: true,
+    },
+  }),
+
   removeKeyboard: () => Markup.removeKeyboard(),
 };

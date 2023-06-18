@@ -3,6 +3,7 @@ import {
   Command,
   Ctx,
   InjectBot,
+  On,
   Start,
   Update,
 } from 'nestjs-telegraf';
@@ -73,26 +74,12 @@ export class BotUpdate {
     await replyMainMenuMessage(ctx);
   }
 
-  @Action(CALLBACK_NAMES.FIND_DESSERT_BY_CATEGORY)
-  async onFindByCategory(@Ctx() ctx: Context) {
-    await ctx.editMessageReplyMarkup(null);
-
-    await ctx.scene.enter(SCENES.FIND_ANNOUNCEMENT_SCENE, { type: 'category' });
-  }
-
-  @Action(CALLBACK_NAMES.FIND_DESSERT_BY_TITLE)
-  async onFindByTitle(@Ctx() ctx: Context & any) {
-    await ctx.editMessageReplyMarkup(null);
-
-    await ctx.scene.enter(SCENES.FIND_ANNOUNCEMENT_SCENE, { type: 'title' });
-  }
-
-  @Action(CALLBACK_NAMES.RECOMMENDATIONS)
+  @Action(CALLBACK_NAMES.FIND_DESSERT)
   async onRecommendations(@Ctx() ctx: Context & any) {
     await ctx.editMessageReplyMarkup(null);
 
     await ctx.scene.enter(SCENES.FIND_ANNOUNCEMENT_SCENE, {
-      type: 'recommendations',
+      type: 'all',
     });
   }
 
@@ -101,5 +88,14 @@ export class BotUpdate {
     await ctx.editMessageReplyMarkup(null);
 
     await ctx.scene.enter(SCENES.EDIT_LOCATION_SCENE);
+  }
+
+  @Action(CALLBACK_NAMES.FAVORITED_ANNOUNCEMENTS)
+  async onFavouritedAnnouncements(@Ctx() ctx: Context & any) {
+    await ctx.editMessageReplyMarkup(null);
+
+    await ctx.scene.enter(SCENES.FIND_ANNOUNCEMENT_SCENE, {
+      type: 'favourited',
+    });
   }
 }

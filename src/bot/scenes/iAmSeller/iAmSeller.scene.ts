@@ -41,6 +41,7 @@ export class IAmSellerScene {
 
     ctx.wizard.state.user.telegram_id = getUserId(ctx);
     ctx.wizard.state.user.type = 'seller';
+    ctx.wizard.state.user.favouritedAnnouncements = [];
 
     ctx.reply(MESSAGES.REGISTRATION_3, iAmSellerKeyboards.step3());
 
@@ -120,25 +121,12 @@ export class IAmSellerScene {
     ctx.wizard.next();
   }
 
-  // Контакты
+  // Подтверждение
   @WizardStep(4)
   @On('text')
   async step4(@Ctx() ctx: Scenes.WizardContext & any) {
     ctx.wizard.state.user.about = ctx.update.message.text;
-
-    await ctx.reply(
-      MESSAGES.REGISTRATION_5(ctx.wizard.state.user.name),
-      Markup.removeKeyboard(),
-    );
-
-    ctx.wizard.next();
-  }
-
-  // Подтверждение
-  @WizardStep(5)
-  @On('text')
-  async step5(@Ctx() ctx: Scenes.WizardContext & any) {
-    ctx.wizard.state.user.contacts = ctx.update.message.text;
+    ctx.wizard.state.user.contacts = '@' + ctx.update.message.from.username;
 
     await ctx.reply(MESSAGES.REGISTRATION_6);
     await ctx.reply(
@@ -150,7 +138,7 @@ export class IAmSellerScene {
   }
 
   // Регистрация закончена
-  @WizardStep(6)
+  @WizardStep(5)
   @Hears(MESSAGES.CONFIRM)
   async step6(@Ctx() ctx: Scenes.WizardContext & any) {
     // await ctx.reply(MESSAGES.REGISTRATION_7, Markup.removeKeyboard());
@@ -161,7 +149,7 @@ export class IAmSellerScene {
   }
 
   // Заполнить снова
-  @WizardStep(6)
+  @WizardStep(5)
   @Hears(MESSAGES.EDIT_AGAIN)
   async editAgain(@Ctx() ctx: Scenes.WizardContext) {
     await ctx.scene.reenter();

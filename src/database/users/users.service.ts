@@ -104,4 +104,32 @@ export class UsersService {
       },
     );
   }
+
+  async addFavoritedAnnouncementToUser(userId: number, announcementId: number) {
+    let favouritedAnnouncementsList = null;
+
+    await this.getUserById(userId).then((res) => {
+      console.log(res);
+      favouritedAnnouncementsList = res.favouritedAnnouncements;
+    });
+
+    if (favouritedAnnouncementsList?.includes(announcementId)) {
+      return false;
+    }
+
+    return this.usersModel.collection.updateOne(
+      { telegram_id: userId },
+      { $push: { favouritedAnnouncements: announcementId } },
+    );
+  }
+
+  async removeFavoritedAnnouncementFromUser(
+    userId: number,
+    announcementId: number,
+  ) {
+    return this.usersModel.collection.updateOne(
+      { telegram_id: userId },
+      { $pull: { favouritedAnnouncements: announcementId } },
+    );
+  }
 }

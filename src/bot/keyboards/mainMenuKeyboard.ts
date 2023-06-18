@@ -5,20 +5,12 @@ export const mainMenuKeyboard = {
     inline_keyboard: [
       [
         {
-          text: MESSAGES.FIND_DESSERT_BY_CATEGORY,
-          callback_data: CALLBACK_NAMES.FIND_DESSERT_BY_CATEGORY,
+          text: MESSAGES.FIND_DESSERT,
+          callback_data: CALLBACK_NAMES.FIND_DESSERT,
         },
-      ],
-      [
         {
-          text: MESSAGES.FIND_DESSERT_BY_TITLE,
-          callback_data: CALLBACK_NAMES.FIND_DESSERT_BY_TITLE,
-        },
-      ],
-      [
-        {
-          text: MESSAGES.RECOMMENDATIONS,
-          callback_data: CALLBACK_NAMES.RECOMMENDATIONS,
+          text: MESSAGES.FAVORITED_ANNOUNCEMENTS,
+          callback_data: CALLBACK_NAMES.FAVORITED_ANNOUNCEMENTS,
         },
       ],
       [
