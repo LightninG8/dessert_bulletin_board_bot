@@ -89,8 +89,6 @@ export class FindAnnouncementScene {
     const announcements =
       await this.announcementsService.findRecommendedAnnouncements(city);
 
-    console.log(announcements);
-
     if (announcements?.length == 0) {
       await ctx.reply(MESSAGES.RECOMMENDATIONS_ERROR, Markup.removeKeyboard());
 

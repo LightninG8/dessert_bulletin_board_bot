@@ -16,7 +16,7 @@ export class Announcement {
   description: string;
 
   @Prop({ required: true })
-  photo: string | null;
+  photo?: string | null;
 
   @Prop({ required: true })
   price: string;

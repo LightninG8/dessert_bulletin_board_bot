@@ -201,10 +201,17 @@ export class MySellerProfileScene {
     ctx.scene.state.isEditing = false;
     ctx.scene.state.editType = null;
 
-    await ctx.replyWithPhoto(user.photo, {
-      ...mySellerProfileKeyboard.enter(user),
-      caption: mySellerProfileFormatter(user),
-    });
+    if (user.photo) {
+      await ctx.replyWithPhoto(user.photo, {
+        ...mySellerProfileKeyboard.enter(user),
+        caption: mySellerProfileFormatter(user),
+      });
+    } else {
+      await ctx.reply(
+        mySellerProfileFormatter(user),
+        mySellerProfileKeyboard.enter(user),
+      );
+    }
   }
 
   @SceneLeave()

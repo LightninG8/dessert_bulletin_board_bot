@@ -103,13 +103,33 @@ export class UsersService {
         $set: obj,
       },
     );
+
+    const keys = Object.keys(obj);
+
+    const isCity = keys.includes('city');
+    const isLocation = keys.includes('location');
+    const isAbout = keys.includes('about');
+    const isContacts = keys.includes('contacts');
+
+    if (isCity || isLocation || isAbout || isContacts) {
+      const user = await this.getUserById(userId);
+      for (const id of user.announcements) {
+        const newObj = {};
+
+        isCity ? (newObj['city'] = obj['city']) : null;
+        isLocation ? (newObj['location'] = obj['location']) : null;
+        isAbout ? (newObj['about'] = obj['about']) : null;
+        isContacts ? (newObj['contacts'] = obj['contacts']) : null;
+
+        await this.announcementsService.changeAnnouncement(id, newObj);
+      }
+    }
   }
 
   async addFavoritedAnnouncementToUser(userId: number, announcementId: number) {
     let favouritedAnnouncementsList = null;
 
     await this.getUserById(userId).then((res) => {
-      console.log(res);
       favouritedAnnouncementsList = res.favouritedAnnouncements;
     });
 
