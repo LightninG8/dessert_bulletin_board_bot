@@ -23,7 +23,7 @@ export class EditLocationScene {
   @Command('main_menu')
   @Command('seller_cabinet')
   onMainMenu(@Ctx() ctx: Scenes.WizardContext & any) {
-    ctx.reply('Завершите добавление объявления');
+    ctx.reply('Завершите изменение города');
   }
 
   @SceneEnter()
