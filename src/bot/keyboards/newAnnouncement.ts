@@ -30,5 +30,18 @@ export const newAnnouncementKeyboard = {
     },
   }),
 
+  exit: () => ({
+    reply_markup: {
+      keyboard: [
+        [
+          {
+            text: MESSAGES.EXIT_FROM_NEW_ANNOUNCEMENT,
+          },
+        ],
+      ],
+      resize_keyboard: true,
+    },
+  }),
+
   removeKeyboard: () => Markup.removeKeyboard(),
 };

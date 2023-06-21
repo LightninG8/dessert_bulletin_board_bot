@@ -53,7 +53,7 @@ export class NewAnnouncementScene {
       Markup.removeKeyboard(),
     );
 
-    await ctx.reply(MESSAGES.INPUT_TITLE, Markup.removeKeyboard());
+    await ctx.reply(MESSAGES.INPUT_TITLE, newAnnouncementKeyboard.exit());
 
     await ctx.wizard.next();
   }
@@ -64,7 +64,7 @@ export class NewAnnouncementScene {
   async step2(@Ctx() ctx: Scenes.WizardContext & any) {
     ctx.wizard.state.announcement.title = ctx.update.message.text;
 
-    await ctx.reply(MESSAGES.INPUT_DESCRIPTION, Markup.removeKeyboard());
+    await ctx.reply(MESSAGES.INPUT_DESCRIPTION, newAnnouncementKeyboard.exit());
 
     await ctx.wizard.next();
   }
@@ -74,7 +74,7 @@ export class NewAnnouncementScene {
   async step3(@Ctx() ctx: Scenes.WizardContext & any) {
     ctx.wizard.state.announcement.description = ctx.update.message.text;
 
-    await ctx.reply(MESSAGES.INPUT_PRICE, Markup.removeKeyboard());
+    await ctx.reply(MESSAGES.INPUT_PRICE, newAnnouncementKeyboard.exit());
 
     await ctx.wizard.next();
   }
@@ -93,7 +93,7 @@ export class NewAnnouncementScene {
 
     ctx.wizard.state.announcement.price = inputPrice;
 
-    await ctx.reply(MESSAGES.INPUT_PHOTOS, Markup.removeKeyboard());
+    await ctx.reply(MESSAGES.INPUT_PHOTOS, newAnnouncementKeyboard.exit());
 
     await ctx.wizard.next();
   }
@@ -147,6 +147,15 @@ export class NewAnnouncementScene {
       Markup.removeKeyboard(),
     );
 
+    await ctx.scene.enter(SCENES.SELLER_CABINET);
+  }
+
+  @Hears(MESSAGES.EXIT_FROM_NEW_ANNOUNCEMENT)
+  async exit(@Ctx() ctx: Scenes.WizardContext & any) {
+    await ctx.reply(
+      'Вы вышли из добавления объявления',
+      Markup.removeKeyboard(),
+    );
     await ctx.scene.enter(SCENES.SELLER_CABINET);
   }
 }
