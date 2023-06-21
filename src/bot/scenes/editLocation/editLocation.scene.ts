@@ -1,4 +1,5 @@
 import {
+  Command,
   Context as Ctx,
   On,
   Scene,
@@ -18,6 +19,13 @@ export class EditLocationScene {
     private geocoderService: GeocoderService,
     private usersService: UsersService,
   ) {}
+  @Command('start')
+  @Command('main_menu')
+  @Command('seller_cabinet')
+  onMainMenu(@Ctx() ctx: Scenes.WizardContext & any) {
+    ctx.reply('Завершите добавление объявления');
+  }
+
   @SceneEnter()
   async onEnter(@Ctx() ctx: Scenes.SceneContext & any) {
     ctx.scene.state.inputType = 'location';

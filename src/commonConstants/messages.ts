@@ -103,6 +103,8 @@ export const MESSAGES = {
   FIND_DESSERT_BY_CATEGORY_ERROR: 'В этой категории ещё нет объявлений',
   FIND_DESSERT_BY_TITLE_ERROR: 'Объявлений с таким названием не найдено',
   RECOMMENDATIONS_ERROR: 'Объявлений не найдено',
+  RECOMMENDATIONS_CITY_ERROR:
+    'Объявлений пока нет, но скоро ученицы Фабрики доберутся и до вашего города',
   ANNOUNCEMENTS_FOUND: (count: number) => {
     let formattedWord = 'объявлений';
     const lastDigit = +count.toString().split('').pop();

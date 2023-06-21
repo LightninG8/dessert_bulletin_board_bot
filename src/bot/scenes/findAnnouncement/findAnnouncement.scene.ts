@@ -96,7 +96,10 @@ export class FindAnnouncementScene {
       await this.announcementsService.findRecommendedAnnouncements(city);
 
     if (announcements?.length == 0) {
-      await ctx.reply(MESSAGES.RECOMMENDATIONS_ERROR, Markup.removeKeyboard());
+      await ctx.reply(
+        MESSAGES.RECOMMENDATIONS_CITY_ERROR,
+        Markup.removeKeyboard(),
+      );
 
       await this.onMainMenu(ctx);
     }
