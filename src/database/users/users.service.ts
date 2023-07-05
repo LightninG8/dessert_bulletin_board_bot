@@ -82,7 +82,7 @@ export class UsersService {
     let announcementsList = null;
 
     await this.getUserById(userId).then((res) => {
-      announcementsList = res.announcements;
+      announcementsList = res?.announcements;
     });
 
     let result = null;

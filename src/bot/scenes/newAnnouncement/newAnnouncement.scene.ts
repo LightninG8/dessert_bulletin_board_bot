@@ -62,6 +62,12 @@ export class NewAnnouncementScene {
   @WizardStep(2)
   @On('text')
   async step2(@Ctx() ctx: Scenes.WizardContext & any) {
+    if (ctx.update.message.text.length > 100) {
+      await ctx.reply(MESSAGES.EDIT_LENGTH_ERROR(100));
+
+      return;
+    }
+
     ctx.wizard.state.announcement.title = ctx.update.message.text;
 
     await ctx.reply(MESSAGES.INPUT_DESCRIPTION, newAnnouncementKeyboard.exit());
@@ -72,6 +78,12 @@ export class NewAnnouncementScene {
   // Введите цену
   @WizardStep(3)
   async step3(@Ctx() ctx: Scenes.WizardContext & any) {
+    if (ctx.update.message.text.length > 500) {
+      await ctx.reply(MESSAGES.EDIT_LENGTH_ERROR(500));
+
+      return;
+    }
+
     ctx.wizard.state.announcement.description = ctx.update.message.text;
 
     await ctx.reply(MESSAGES.INPUT_PRICE, newAnnouncementKeyboard.exit());

@@ -130,6 +130,24 @@ export class MySellerProfileScene {
       return;
     }
 
+    if (
+      ctx.update.message.text.length > 100 &&
+      ctx.scene.state.editType == 'NAME'
+    ) {
+      await ctx.reply(MESSAGES.EDIT_LENGTH_ERROR(100));
+
+      return;
+    }
+
+    if (
+      ctx.update.message.text.length > 300 &&
+      ctx.scene.state.editType == 'ABOUT'
+    ) {
+      await ctx.reply(MESSAGES.EDIT_LENGTH_ERROR(300));
+
+      return;
+    }
+
     const type = ctx.scene.state.editType;
 
     let userAnswer = null;

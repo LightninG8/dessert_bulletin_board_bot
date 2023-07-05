@@ -39,6 +39,12 @@ export class MyAnnouncementsScene {
       getUserId(ctx),
     );
 
+    // const userAnnouncements = await this.usersService.getUserAnnouncements(
+    //   435893760,
+    // );
+
+    console.log(userAnnouncements);
+
     ctx.scene.state.isEditing = false;
     ctx.scene.state.editType = null;
     ctx.scene.state.editingId = null;
@@ -210,6 +216,24 @@ export class MyAnnouncementsScene {
   @On('photo')
   async onEdit(@Ctx() ctx: SceneContext & any) {
     if (!ctx.scene.state.isEditing) {
+      return;
+    }
+
+    if (
+      ctx.update.message.text.length > 100 &&
+      ctx.scene.state.editType == 'TITLE'
+    ) {
+      await ctx.reply(MESSAGES.EDIT_LENGTH_ERROR(100));
+
+      return;
+    }
+
+    if (
+      ctx.update.message.text.length > 500 &&
+      ctx.scene.state.editType == 'DESCRIPTION'
+    ) {
+      await ctx.reply(MESSAGES.EDIT_LENGTH_ERROR(500));
+
       return;
     }
 

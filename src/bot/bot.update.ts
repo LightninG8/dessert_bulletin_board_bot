@@ -34,6 +34,16 @@ export class BotUpdate {
   async onStart(@Ctx() ctx: Context) {
     await ctx.scene.enter(SCENES.START_SCENE);
   }
+  @Action(CALLBACK_NAMES.START_REGISTRATION)
+  async onActionStart(@Ctx() ctx: Context & any) {
+    await ctx.answerCbQuery();
+
+    await ctx.editMessageReplyMarkup({
+      reply_markup: { remove_keyboard: true },
+    });
+
+    await ctx.scene.enter(SCENES.START_SCENE);
+  }
 
   @UseGuards(AnnouncementsLimitGuard)
   @UseGuards(SellerGuard)
