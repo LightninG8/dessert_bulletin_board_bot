@@ -19,6 +19,7 @@ import {
   AuthGuard,
   SellerGuard,
   TelegrafExceptionFilter,
+  deleteMessage,
   getCallbackData,
   getIdFromCbQuery,
   getUserId,
@@ -65,7 +66,7 @@ export class MySellerProfileScene {
   async onBackToSellerCabinet(@Ctx() ctx: SceneContext & any) {
     await ctx.answerCbQuery();
 
-    await ctx.deleteMessage();
+    await deleteMessage(ctx);
 
     ctx.scene.enter(SCENES.SELLER_CABINET);
   }
@@ -242,9 +243,9 @@ export class MySellerProfileScene {
 
   @Command('main_menu')
   async onMainMenu(@Ctx() ctx: SceneContext & any) {
-    const { chatId, messageId } = ctx.scene.state;
+    // const { chatId, messageId } = ctx.scene.state;
 
-    await this.bot.telegram.deleteMessage(chatId, messageId);
+    // await this.bot.telegram.deleteMessage(chatId, messageId);
     await replyMainMenuMessage(ctx);
 
     await ctx.scene.leave();

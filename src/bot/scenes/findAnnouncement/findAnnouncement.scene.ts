@@ -18,6 +18,7 @@ import {
 import {
   announcementFormatter,
   complainAnnouncementFormatter,
+  deleteMessage,
   getCallbackData,
   getIdFromCbQuery,
   getUserId,
@@ -139,6 +140,27 @@ export class FindAnnouncementScene {
     });
   }
 
+  async updateAnnouncement(@Ctx() ctx: Scenes.SceneContext & any) {
+    const step = ctx.scene.state.step;
+    const announcement = ctx.scene.state.announcements[step];
+    const keyboard = await this.getKeyboard(ctx);
+
+    ctx.scene.state.showInfo = false;
+    ctx.scene.state.showContacts = false;
+
+    await ctx.editMessageMedia({
+      type: 'photo',
+      media: announcement.photo,
+    });
+    await ctx.editMessageCaption(
+      announcementFormatter(announcement, {
+        showInfo: false,
+        showContacts: false,
+      }),
+    );
+    await ctx.editMessageReplyMarkup(keyboard.reply_markup);
+  }
+
   @Action(CALLBACK_NAMES.EXIT)
   async onExit(@Ctx() ctx: Scenes.SceneContext & any) {
     await ctx.answerCbQuery();
@@ -151,7 +173,6 @@ export class FindAnnouncementScene {
   @Action(CALLBACK_NAMES.NEXT_ANNOUNCEMENT)
   async onNext(@Ctx() ctx: Scenes.SceneContext & any) {
     await ctx.answerCbQuery();
-    await ctx.editMessageReplyMarkup(null);
 
     const announcementsLength = ctx.scene.state.announcements.length;
 
@@ -159,6 +180,7 @@ export class FindAnnouncementScene {
 
     if (ctx.scene.state.step > announcementsLength - 1) {
       await ctx.scene.leave();
+      await ctx.editMessageReplyMarkup(null);
 
       await ctx.reply(
         MESSAGES.ALL_ANNOUNCEMENTS_VIEWED,
@@ -169,7 +191,7 @@ export class FindAnnouncementScene {
       return;
     }
 
-    await this.showAnnouncement(ctx);
+    await this.updateAnnouncement(ctx);
   }
 
   @Action(CALLBACK_NAMES.BACK)
@@ -181,9 +203,7 @@ export class FindAnnouncementScene {
       return;
     }
 
-    await ctx.editMessageReplyMarkup(null);
-
-    await this.showAnnouncement(ctx);
+    await this.updateAnnouncement(ctx);
   }
 
   @Action(CALLBACK_NAMES.SHOW_INFO)

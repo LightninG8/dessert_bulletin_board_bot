@@ -31,3 +31,11 @@ export const getCallbackData = (
 
   return userAnswer;
 };
+
+export const deleteMessage = async (ctx: Context & any) => {
+  try {
+    await ctx.deleteMessage();
+  } catch (e) {
+    console.log(e);
+  }
+};

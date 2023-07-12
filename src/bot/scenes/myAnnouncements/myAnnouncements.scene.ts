@@ -13,6 +13,7 @@ import { Context } from 'vm';
 import {
   TelegrafExceptionFilter,
   announcementFormatter,
+  deleteMessage,
   getCallbackData,
   getIdFromCbQuery,
   getUserId,
@@ -73,7 +74,7 @@ export class MyAnnouncementsScene {
       (el) => el.id === id,
     );
 
-    await ctx.deleteMessage();
+    await deleteMessage(ctx);
 
     await ctx.replyWithPhoto(announcement.photo, {
       ...myAnnouncementsKeyboards.announcement(announcement),
@@ -104,7 +105,7 @@ export class MyAnnouncementsScene {
   @Action(CALLBACK_NAMES.BACK_TO_ENTER)
   async backToEnter(@Ctx() ctx: SceneContext & any) {
     await ctx.answerCbQuery();
-    await ctx.deleteMessage();
+    await deleteMessage(ctx);
 
     await ctx.reply(
       MESSAGES.MY_ANNOUNCEMENTS,
@@ -124,7 +125,7 @@ export class MyAnnouncementsScene {
       (el) => el.id === id,
     );
 
-    await ctx.deleteMessage();
+    await deleteMessage(ctx);
 
     await ctx.replyWithPhoto(announcement.photo, {
       ...myAnnouncementsKeyboards.announcement(announcement),
@@ -147,7 +148,7 @@ export class MyAnnouncementsScene {
       (el) => el.id === id,
     );
 
-    await ctx.deleteMessage();
+    await deleteMessage(ctx);
 
     await ctx.reply(
       MESSAGES.TRY_TO_DELETE_ANNOUNCEMENT,
@@ -174,7 +175,7 @@ export class MyAnnouncementsScene {
   async back(@Ctx() ctx: Context & { update: Update.CallbackQueryUpdate }) {
     await ctx.answerCbQuery();
 
-    await ctx.deleteMessage();
+    await deleteMessage(ctx);
 
     await ctx.scene.enter(SCENES.SELLER_CABINET);
   }

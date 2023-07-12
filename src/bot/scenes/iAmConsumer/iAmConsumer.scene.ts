@@ -7,7 +7,7 @@ import {
   SceneLeave,
 } from 'nestjs-telegraf';
 import { iAmConsumerKeyboards, mainMenuKeyboard } from 'src/bot/keyboards';
-import { getUserId, getUserName, replyMainMenuMessage } from 'src/common';
+import { getUserId, getUserName, inputCityFormatter, replyMainMenuMessage } from 'src/common';
 import { MESSAGES, SCENES } from 'src/commonConstants';
 import { UsersService } from 'src/database';
 import { GeocoderService } from 'src/geocoder';
@@ -78,7 +78,7 @@ export class IAmConsumerScene {
 
     const text = String(ctx.update.message.text).toLowerCase();
 
-    ctx.scene.state.user.city = text.charAt(0).toUpperCase() + text.slice(1);
+    ctx.scene.state.user.city = inputCityFormatter(text);
     ctx.scene.state.user.location = null;
 
     await ctx.scene.leave();

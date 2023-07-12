@@ -11,6 +11,7 @@ import {
   TelegrafExceptionFilter,
   getUserId,
   getUserName,
+  inputCityFormatter,
   mySellerProfileFormatter,
 } from 'src/common';
 import { UseFilters } from '@nestjs/common';
@@ -110,7 +111,7 @@ export class IAmSellerScene {
   async step3Text(@Ctx() ctx: Scenes.WizardContext & any) {
     const text = String(ctx.update.message.text).toLowerCase();
 
-    ctx.wizard.state.user.city = text.charAt(0).toUpperCase() + text.slice(1);
+    ctx.wizard.state.user.city = inputCityFormatter(text);
     ctx.wizard.state.user.location = null;
 
     await ctx.reply(

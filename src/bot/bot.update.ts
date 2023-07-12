@@ -15,6 +15,7 @@ import {
   AuthGuard,
   SellerGuard,
   TelegrafExceptionFilter,
+  deleteMessage,
   replyMainMenuMessage,
 } from 'src/common';
 import { BOT_NAME, CALLBACK_NAMES, SCENES } from 'src/commonConstants';
@@ -89,7 +90,7 @@ export class BotUpdate {
   @Action(CALLBACK_NAMES.FIND_DESSERT)
   async onRecommendations(@Ctx() ctx: Context & any) {
     await ctx.answerCbQuery();
-    await ctx.deleteMessage();
+    await deleteMessage(ctx);
 
     await ctx.scene.enter(SCENES.FIND_ANNOUNCEMENT_SCENE, {
       type: 'all',
@@ -99,7 +100,7 @@ export class BotUpdate {
   @Action(CALLBACK_NAMES.EDIT_LOCATION)
   async onEditLocation(@Ctx() ctx: Context & any) {
     await ctx.answerCbQuery();
-    await ctx.deleteMessage();
+    await deleteMessage(ctx);
 
     await ctx.scene.enter(SCENES.EDIT_LOCATION_SCENE);
   }
@@ -107,7 +108,7 @@ export class BotUpdate {
   @Action(CALLBACK_NAMES.FAVORITED_ANNOUNCEMENTS)
   async onFavouritedAnnouncements(@Ctx() ctx: Context & any) {
     await ctx.answerCbQuery();
-    await ctx.deleteMessage();
+    await deleteMessage(ctx);
 
     await ctx.scene.enter(SCENES.FIND_ANNOUNCEMENT_SCENE, {
       type: 'favourited',

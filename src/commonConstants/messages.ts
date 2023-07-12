@@ -5,7 +5,7 @@ export const MESSAGES = {
   I_AM_CONSUMER: 'Я покупатель',
 
   REGISTRATION_PROHIBITED:
-    'Регистрация доступна только тем пользователям, кто прошёл курс "ФАБРИКА ДЕСЕРТОВ | 5 поток".\n\nПерейдите по этой ссылке, чтобы бот проверил ваше участие в курсе. После этого снова отправьте команду /start спустя 1 минуту',
+    'Регистрация доступна только тем пользователям, кто прошёл курс "ФАБРИКА ДЕСЕРТОВ".\n\nПерейдите по этой ссылке, чтобы бот проверил ваше участие в курсе. После этого снова отправьте команду /start спустя 1 минуту',
   NEED_REGISTRATION:
     'Для начала нужно зарегистрироваться как продавец. Введите команду /start чтобы зарегистрироваться',
   ANNOUNCEMENTS_LIMIT_REACHED: 'Вы достигли лимита объявлений',
@@ -111,11 +111,11 @@ export const MESSAGES = {
     let formattedWord = 'объявлений';
     const lastDigit = +count.toString().split('').pop();
 
-    if (lastDigit == (0 || 5 || 6 || 7 || 8 || 9)) {
+    if ([0, 5, 6, 7, 8, 9].includes(lastDigit)) {
       formattedWord = 'объявлений';
     } else if (lastDigit == 1) {
       formattedWord = 'объявление';
-    } else if (lastDigit == (2 || 3 || 4)) {
+    } else if ([2, 3, 4].includes(lastDigit)) {
       formattedWord = 'объявления';
     }
 

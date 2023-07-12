@@ -14,6 +14,7 @@ import { Context } from 'vm';
 import {
   SellerGuard,
   TelegrafExceptionFilter,
+  deleteMessage,
   getCallbackData,
 } from 'src/common';
 import { UseFilters, UseGuards } from '@nestjs/common';
@@ -34,7 +35,7 @@ export class StartScene {
   ) {
     await ctx.answerCbQuery();
 
-    await ctx.deleteMessage();
+    await deleteMessage(ctx);
 
     await ctx.scene.enter(SCENES.I_AM_CONSUMER_SCENE);
   }

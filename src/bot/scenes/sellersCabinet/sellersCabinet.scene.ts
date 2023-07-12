@@ -14,7 +14,11 @@ import {
   MESSAGES,
   BOT_NAME,
 } from 'src/commonConstants';
-import { TelegrafExceptionFilter, replyMainMenuMessage } from 'src/common';
+import {
+  TelegrafExceptionFilter,
+  deleteMessage,
+  replyMainMenuMessage,
+} from 'src/common';
 import { UseFilters } from '@nestjs/common';
 import { mainMenuKeyboard, sellersCabinetKeyboard } from 'src/bot/keyboards';
 import { Context, Telegraf } from 'telegraf';
@@ -37,7 +41,7 @@ export class SellersCabinetScene {
   @Action(CALLBACK_NAMES.MY_ANNOUNCEMENTS)
   async onMyAnnouncements(@Ctx() ctx: SceneContext & any) {
     await ctx.answerCbQuery();
-    await ctx.deleteMessage();
+    await deleteMessage(ctx);
 
     await ctx.scene.enter(SCENES.MY_ANNOUNCEMENTS);
   }
@@ -45,7 +49,7 @@ export class SellersCabinetScene {
   @Action(CALLBACK_NAMES.MY_SELLER_PROFILE)
   async onMySellerProfile(@Ctx() ctx: SceneContext & any) {
     await ctx.answerCbQuery();
-    await ctx.deleteMessage();
+    await deleteMessage(ctx);
 
     await ctx.scene.enter(SCENES.MY_SELLER_PROFILE);
   }
@@ -53,7 +57,7 @@ export class SellersCabinetScene {
   @Action(CALLBACK_NAMES.NEW_ANNOUNCEMENT)
   async onNewAnnouncement(@Ctx() ctx: SceneContext & any) {
     await ctx.answerCbQuery();
-    await ctx.deleteMessage();
+    await deleteMessage(ctx);
 
     await ctx.scene.enter(SCENES.NEW_ANNOUNCEMENT);
   }
@@ -64,7 +68,7 @@ export class SellersCabinetScene {
     await ctx.editMessageReplyMarkup({
       reply_markup: { remove_keyboard: true },
     });
-    await ctx.deleteMessage();
+    await deleteMessage(ctx);
 
     await replyMainMenuMessage(ctx);
 
@@ -83,9 +87,9 @@ export class SellersCabinetScene {
 
   @Command('main_menu')
   async onMainMenu(@Ctx() ctx: SceneContext & any) {
-    const { chatId, messageId } = ctx.scene.state;
+    // const { chatId, messageId } = ctx.scene.state;
 
-    this.bot.telegram.deleteMessage(chatId, messageId);
+    // this.bot.telegram.deleteMessage(chatId, messageId);
     await replyMainMenuMessage(ctx);
 
     await ctx.scene.leave();
