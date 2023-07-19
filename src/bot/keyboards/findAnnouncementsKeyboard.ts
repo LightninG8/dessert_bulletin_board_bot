@@ -1,4 +1,5 @@
 import { CALLBACK_NAMES, MESSAGES } from 'src/commonConstants';
+import { Markup } from 'telegraf';
 
 export const findAnnouncementsKeyboard = {
   show: () => ({
@@ -78,6 +79,7 @@ export const findAnnouncementsKeyboard = {
           },
         ],
         [
+          Markup.button.url('Поддержка', `https://t.me/rodimova_otdel_zaboty`),
           {
             text: MESSAGES.COMPLAIN,
             callback_data: CALLBACK_NAMES.COMPLAIN_ANNOUNCEMENT,

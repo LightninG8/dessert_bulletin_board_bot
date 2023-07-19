@@ -7,7 +7,12 @@ import {
   SceneLeave,
 } from 'nestjs-telegraf';
 import { iAmConsumerKeyboards, mainMenuKeyboard } from 'src/bot/keyboards';
-import { getUserId, getUserName, inputCityFormatter, replyMainMenuMessage } from 'src/common';
+import {
+  getUserId,
+  getUserName,
+  inputCityFormatter,
+  replyMainMenuMessage,
+} from 'src/common';
 import { MESSAGES, SCENES } from 'src/commonConstants';
 import { UsersService } from 'src/database';
 import { GeocoderService } from 'src/geocoder';
