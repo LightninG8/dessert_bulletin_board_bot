@@ -29,6 +29,10 @@ export class IAmSellerScene {
   ) {}
 
   @Command('start')
+  onCommandStart(@Ctx() ctx: Scenes.WizardContext & any) {
+    ctx.scene.enter(SCENES.START_SCENE);
+  }
+
   @Command('main_menu')
   @Command('seller_cabinet')
   onMainMenu(@Ctx() ctx: Scenes.WizardContext & any) {
