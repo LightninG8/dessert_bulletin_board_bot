@@ -109,7 +109,7 @@ export const MESSAGES = {
     `Максимальное количество символов - ${number}`,
   ANNOUNCEMENTS_FOUND: (count: number) => {
     let formattedWord = 'объявлений';
-    const lastDigit = +count.toString().split('').pop();
+    const lastDigit = +count.toString().split('')?.pop();
 
     if ([0, 5, 6, 7, 8, 9].includes(lastDigit)) {
       formattedWord = 'объявлений';

@@ -1,5 +1,6 @@
 import {
   Action,
+  Command,
   Ctx,
   On,
   Scene,
@@ -11,14 +12,17 @@ import { Update } from 'telegraf/typings/core/types/typegram';
 import { CALLBACK_NAMES, SCENES, MESSAGES } from 'src/commonConstants';
 import { Context } from 'vm';
 import {
+  AuthGuard,
+  SellerGuard,
   TelegrafExceptionFilter,
   announcementFormatter,
   deleteMessage,
   getCallbackData,
   getIdFromCbQuery,
   getUserId,
+  replyMainMenuMessage,
 } from 'src/common';
-import { UseFilters } from '@nestjs/common';
+import { UseFilters, UseGuards } from '@nestjs/common';
 import { AnnouncementsService, UsersService } from 'src/database';
 import {
   iAmSellerKeyboards,
@@ -51,7 +55,7 @@ export class MyAnnouncementsScene {
     ctx.scene.state.editingId = null;
     ctx.scene.state.userAnnouncements = userAnnouncements;
 
-    if (!ctx.scene.state.userAnnouncements.length) {
+    if (!ctx.scene.state.userAnnouncements?.length) {
       await ctx.reply(MESSAGES.NO_ANNOUNCEMENTS);
 
       await ctx.scene.enter(SCENES.SELLER_CABINET);
@@ -62,6 +66,19 @@ export class MyAnnouncementsScene {
       MESSAGES.MY_ANNOUNCEMENTS,
       myAnnouncementsKeyboards.enter(ctx.scene.state.userAnnouncements),
     );
+  }
+
+  @UseGuards(SellerGuard)
+  @UseGuards(AuthGuard)
+  @Command('seller_cabinet')
+  async sellersCabinet(@Ctx() ctx: Context & any) {
+    await ctx.scene.enter(SCENES.SELLER_CABINET);
+  }
+
+  @UseGuards(AuthGuard)
+  @Command('main_menu')
+  async onMainMenu(@Ctx() ctx: Context & any) {
+    await replyMainMenuMessage(ctx);
   }
 
   @Action(new RegExp(`${CALLBACK_NAMES.GET_ANNOUNCEMENT}:[0-9]+`))
@@ -193,7 +210,7 @@ export class MyAnnouncementsScene {
     const callback = getCallbackData(ctx);
     const id = getIdFromCbQuery(callback);
 
-    const type = callback.split(':')[0].split('_').pop();
+    const type = callback.split(':')[0].split('_')?.pop();
 
     ctx.scene.state.editType = type;
     ctx.scene.state.isEditing = true;
@@ -221,7 +238,7 @@ export class MyAnnouncementsScene {
     }
 
     if (
-      ctx.update.message.text.length > 100 &&
+      ctx.update.message.text?.length > 100 &&
       ctx.scene.state.editType == 'TITLE'
     ) {
       await ctx.reply(MESSAGES.EDIT_LENGTH_ERROR(100));
@@ -230,7 +247,7 @@ export class MyAnnouncementsScene {
     }
 
     if (
-      ctx.update.message.text.length > 500 &&
+      ctx.update.message.text?.length > 500 &&
       ctx.scene.state.editType == 'DESCRIPTION'
     ) {
       await ctx.reply(MESSAGES.EDIT_LENGTH_ERROR(500));
@@ -243,7 +260,7 @@ export class MyAnnouncementsScene {
 
     const userAnswer =
       type == 'PHOTO'
-        ? ctx.update.message.photo.pop().file_id
+        ? ctx.update.message.photo?.pop().file_id
         : ctx.update.message.text;
 
     const announcemetKeys = {

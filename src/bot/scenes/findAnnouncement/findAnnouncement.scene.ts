@@ -66,12 +66,12 @@ export class FindAnnouncementScene {
         break;
     }
 
-    if (!ctx.scene.state.announcements.length) {
+    if (!ctx.scene.state.announcements?.length) {
       return;
     }
 
     await ctx.reply(
-      MESSAGES.ANNOUNCEMENTS_FOUND(ctx.scene.state.announcements.length),
+      MESSAGES.ANNOUNCEMENTS_FOUND(ctx.scene.state.announcements?.length),
       Markup.removeKeyboard(),
     );
 
@@ -174,7 +174,7 @@ export class FindAnnouncementScene {
   async onNext(@Ctx() ctx: Scenes.SceneContext & any) {
     await ctx.answerCbQuery();
 
-    const announcementsLength = ctx.scene.state.announcements.length;
+    const announcementsLength = ctx.scene.state.announcements?.length;
 
     ctx.scene.state.step += 1;
 
@@ -293,7 +293,7 @@ export class FindAnnouncementScene {
 
     if (step == 0) {
       keyboard.reply_markup.inline_keyboard = [
-        [keyboard.reply_markup.inline_keyboard[0].pop()],
+        [keyboard.reply_markup.inline_keyboard[0]?.pop()],
         ...keyboard.reply_markup.inline_keyboard.splice(1),
       ];
     }

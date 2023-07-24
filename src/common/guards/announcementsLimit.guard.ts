@@ -18,7 +18,7 @@ export class AnnouncementsLimitGuard implements CanActivate {
       user = res;
     });
 
-    if (!(user.announcements.length < ANNOUNCEMENTS_LIMIT)) {
+    if (!(user.announcements?.length < ANNOUNCEMENTS_LIMIT)) {
       throw new TelegrafException(MESSAGES.ANNOUNCEMENTS_LIMIT_REACHED);
     }
 

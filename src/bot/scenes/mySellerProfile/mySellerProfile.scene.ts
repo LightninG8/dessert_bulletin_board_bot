@@ -99,7 +99,7 @@ export class MySellerProfileScene {
 
     const callback = getCallbackData(ctx);
 
-    const type = callback.split('_').pop();
+    const type = callback.split('_')?.pop();
 
     ctx.scene.state.editType = type;
     ctx.scene.state.isEditing = true;
@@ -132,7 +132,7 @@ export class MySellerProfileScene {
     }
 
     if (
-      ctx.update.message.text.length > 100 &&
+      ctx.update.message.text?.length > 100 &&
       ctx.scene.state.editType == 'NAME'
     ) {
       await ctx.reply(MESSAGES.EDIT_LENGTH_ERROR(100));
@@ -141,7 +141,7 @@ export class MySellerProfileScene {
     }
 
     if (
-      ctx.update.message.text.length > 300 &&
+      ctx.update.message.text?.length > 300 &&
       ctx.scene.state.editType == 'ABOUT'
     ) {
       await ctx.reply(MESSAGES.EDIT_LENGTH_ERROR(300));
@@ -162,7 +162,7 @@ export class MySellerProfileScene {
 
           userAnswer = photo;
         } else {
-          userAnswer = ctx.update.message.photo.pop().file_id;
+          userAnswer = ctx.update.message.photo?.pop().file_id;
         }
         break;
       case 'NAME':

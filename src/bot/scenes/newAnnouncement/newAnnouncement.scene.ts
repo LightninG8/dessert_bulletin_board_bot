@@ -62,7 +62,7 @@ export class NewAnnouncementScene {
   @WizardStep(2)
   @On('text')
   async step2(@Ctx() ctx: Scenes.WizardContext & any) {
-    if (ctx.update.message.text.length > 100) {
+    if (ctx.update.message.text?.length > 100) {
       await ctx.reply(MESSAGES.EDIT_LENGTH_ERROR(100));
 
       return;
@@ -78,7 +78,7 @@ export class NewAnnouncementScene {
   // Введите цену
   @WizardStep(3)
   async step3(@Ctx() ctx: Scenes.WizardContext & any) {
-    if (ctx.update.message.text.length > 500) {
+    if (ctx.update.message.text?.length > 500) {
       await ctx.reply(MESSAGES.EDIT_LENGTH_ERROR(500));
 
       return;
@@ -115,7 +115,7 @@ export class NewAnnouncementScene {
   @On('photo')
   async step6(@Ctx() ctx: Scenes.WizardContext & any) {
     ctx.wizard.state.announcement.photo =
-      ctx.update.message.photo.pop().file_id;
+      ctx.update.message.photo?.pop().file_id;
 
     const { contacts, city, location, telegram_id, about } =
       ctx.wizard.state.user;

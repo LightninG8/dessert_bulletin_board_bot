@@ -5,10 +5,10 @@ export const chunkArray = (arr, cnt) =>
     [],
   );
 
-export const getIdFromCbQuery = (cbQuery: string) => +cbQuery.split(':').pop();
+export const getIdFromCbQuery = (cbQuery: string) => +cbQuery.split(':')?.pop();
 
 export const shuffle = (array) => {
-  let currentIndex = array.length,
+  let currentIndex = array?.length,
     randomIndex;
 
   // While there remain elements to shuffle.
