@@ -42,7 +42,8 @@ import { GetcourseModule } from './getcourse/getcourse.module';
     TelegrafModule.forRootAsync({
       botName: BOT_NAME,
       useFactory: () => ({
-        middlewares: [sessionMiddleware],
+        // middlewares: [sessionMiddleware],
+        middlewares: [],
         token: process.env.BOT_TOKEN,
         include: [BotModule],
       }),
