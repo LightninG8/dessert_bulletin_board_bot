@@ -1,3 +1,4 @@
+import { UseGuards } from '@nestjs/common';
 import {
   Command,
   Context as Ctx,
@@ -8,6 +9,8 @@ import {
 } from 'nestjs-telegraf';
 import { iAmConsumerKeyboards, mainMenuKeyboard } from 'src/bot/keyboards';
 import {
+  AuthGuard,
+  SellerGuard,
   getUserId,
   getUserName,
   inputCityFormatter,
@@ -30,6 +33,8 @@ export class IAmConsumerScene {
     ctx.scene.enter(SCENES.START_SCENE);
   }
   @Command('main_menu')
+  @UseGuards(SellerGuard)
+  @UseGuards(AuthGuard)
   @Command('seller_cabinet')
   onMainMenu(@Ctx() ctx: Scenes.WizardContext & any) {
     ctx.reply('Сначала завершите регистрацию');

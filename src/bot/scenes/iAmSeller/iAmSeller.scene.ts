@@ -8,13 +8,15 @@ import {
 } from 'nestjs-telegraf';
 import { SCENES, MESSAGES } from 'src/commonConstants';
 import {
+  AuthGuard,
+  SellerGuard,
   TelegrafExceptionFilter,
   getUserId,
   getUserName,
   inputCityFormatter,
   mySellerProfileFormatter,
 } from 'src/common';
-import { UseFilters } from '@nestjs/common';
+import { UseFilters, UseGuards } from '@nestjs/common';
 import { GeocoderService } from 'src/geocoder';
 import { Markup, Scenes } from 'telegraf';
 import { iAmSellerKeyboards } from 'src/bot/keyboards';
@@ -33,6 +35,8 @@ export class IAmSellerScene {
     ctx.scene.enter(SCENES.START_SCENE);
   }
 
+  @UseGuards(SellerGuard)
+  @UseGuards(AuthGuard)
   @Command('main_menu')
   @Command('seller_cabinet')
   onMainMenu(@Ctx() ctx: Scenes.WizardContext & any) {

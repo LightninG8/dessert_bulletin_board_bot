@@ -1,3 +1,4 @@
+import { UseGuards } from '@nestjs/common';
 import {
   Action,
   Command,
@@ -16,6 +17,8 @@ import {
   newAnnouncementKeyboard,
 } from 'src/bot/keyboards';
 import {
+  AuthGuard,
+  SellerGuard,
   announcementFormatter,
   complainAnnouncementFormatter,
   deleteMessage,
@@ -78,6 +81,8 @@ export class FindAnnouncementScene {
     await this.showAnnouncement(ctx);
   }
 
+  @UseGuards(SellerGuard)
+  @UseGuards(AuthGuard)
   @Command('seller_cabinet')
   async onSellerCabinet(@Ctx() ctx: Scenes.SceneContext & any) {
     await ctx.scene.enter(SCENES.SELLER_CABINET);

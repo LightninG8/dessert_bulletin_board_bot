@@ -1,3 +1,4 @@
+import { UseGuards } from '@nestjs/common';
 import {
   Command,
   Context as Ctx,
@@ -8,6 +9,8 @@ import {
 } from 'nestjs-telegraf';
 import { iAmConsumerKeyboards, mainMenuKeyboard } from 'src/bot/keyboards';
 import {
+  AuthGuard,
+  SellerGuard,
   getUserId,
   inputCityFormatter,
   replyMainMenuMessage,
@@ -24,6 +27,8 @@ export class EditLocationScene {
     private usersService: UsersService,
   ) {}
   @Command('start')
+  @UseGuards(SellerGuard)
+  @UseGuards(AuthGuard)
   @Command('main_menu')
   @Command('seller_cabinet')
   onMainMenu(@Ctx() ctx: Scenes.WizardContext & any) {

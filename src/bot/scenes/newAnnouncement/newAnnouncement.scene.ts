@@ -1,4 +1,4 @@
-import { UseFilters } from '@nestjs/common';
+import { UseFilters, UseGuards } from '@nestjs/common';
 import {
   Command,
   Context as Ctx,
@@ -10,6 +10,8 @@ import {
 } from 'nestjs-telegraf';
 import { newAnnouncementKeyboard } from 'src/bot/keyboards';
 import {
+  AuthGuard,
+  SellerGuard,
   TelegrafExceptionFilter,
   announcementFormatter,
   getUserId,
@@ -27,6 +29,8 @@ export class NewAnnouncementScene {
   ) {}
 
   @Command('start')
+  @UseGuards(SellerGuard)
+  @UseGuards(AuthGuard)
   @Command('main_menu')
   @Command('seller_cabinet')
   onMainMenu(@Ctx() ctx: Scenes.WizardContext & any) {
